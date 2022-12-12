@@ -1,54 +1,84 @@
 import Link from "next/link";
-import Image from "next/image";
-import React, { useState } from "react";
 import Logo from "./Logo";
 import NavItem from "./NavItem";
+import {SunIcon ,MoonIcon} from "@heroicons/react/24/solid";
+import {useEffect, useState} from 'react';
+import useToggleTheme from "./ToggleTheme";
 
 const MENU_LIST = [
-  {text: "Home", href: "/", active: true},
-  {text: "About Us", href: "/about", active: false},
-  {text: "Contact", href: "/contact", active: false},
+  { text: "Home", href: "/home", active: true },
+  { text: "About Us", href: "/about", active: false },
+  { text: "Contact", href: "/contact", active: false },
 ];
 
-const NavBar = () => {
+
+const renderDarkMode = () => {
+  const {systemTheme, theme, setTheme, mounted} = useToggleTheme();
+
+  if(!mounted) return null;
+
+  const currentTheme = theme === "systme" ? systemTheme : theme;
+  
+  if (currentTheme == "dark") {
+    return (
+      <SunIcon className="mx-1 w-6 text-yellow-500 " role="button" onClick={() => setTheme('light')} />
+    )
+  } else {
+    return (
+      <MoonIcon className="mx-1 w-6 text-gray-900 " role="button" onClick={() => setTheme('dark')} />
+    );
+  }
+};
+
+const Navbar = () => {
   const [navActive, setNavActive] = useState(null);
   const [activeIdx, setActiveIdx] = useState(-1);
 
   return (
-    <header>
-      <nav className="{`nav`}">
-        <Link href={"/"} legacyBehavior>
-          <a>
-            <h1 className="logo">toddlerfaces</h1>
-          </a>
-        </Link>
-        <div
-          onClick={() => setNavActive(!navActive)}
-          className="{`nav__menu-bar`}"
-          >
-            <div></div>
-            <div></div>
-            <div></div>
-          </div>
-          <div className={`${navActive ? "active" : ""} nav__menu-list`}>
-            {
-              MENU_LIST.map((menu, idx) => (
-                <div
-                  onClick={() => {
-                    setActiveIdx(idx);
-                    setNavActive(false);
-                  }}
-                  key={menu.text}
-                >
-                  <NavItem active={activeIdx === idx} {...menu} />
-                </div>
-              ))
-            }
-          </div>
-      </nav>
-    </header>
-  )
+    <nav className="flex justify-between items-center p-4 bg-gray-100 dark:bg-black">
+      <Link href={"/"}>
+        <Logo></Logo>
+      </Link>
+      <div
+        onClick={() => setNavActive(!navActive)}
+        className="flex py-4 cursor-pointer invisible sm:visible"
+      >
+        <div className={`${navActive ? "active" : ""} inline-flex items-center mx-7 w-[calc(min-h-screen_-w-16)]`}>
+          {
+            MENU_LIST.map((menu, idx) => (
+              <div
+                onClick={() => {
+                  setActiveIdx(idx);
+                  setNavActive(false);
+                }}
+                key={menu.text}
+              >
+                <NavItem active={activeIdx === idx} {...menu} />
+              </div>
+            ))
+          }
 
+          <div>
+            <a
+              href="/api/login"
+              className="btn"
+            >Login
+            </a>
+
+            <a
+              href="/api/logout"
+              className="btn"
+            >Logout
+            </a>
+          </div>
+
+          <div>
+            {renderDarkMode()}
+          </div>
+        </div>
+      </div>
+    </nav>
+  )
 };
 
-export default NavBar;
+export default Navbar;
