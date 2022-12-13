@@ -5,7 +5,7 @@ module.exports = {
   content: [
     './app/**/*.{js,ts,jsx,tsx}',
     './pages/**/*.{js,ts,jsx,tsx}',
-    './components/**/*.{js,ts,jsx,tsx}',
+    './components/**/*.{js,ts,jsx,tsx,html}',
   ],
   theme: {
     extend: {
@@ -19,9 +19,6 @@ module.exports = {
       },
     },
   },
-  purge: [
-    './components/**/*.{js,ts,jsx,html}',
-    './pages/**/*.js'],
   variants: {},
   plugins: [
     require('tailwindcss'),

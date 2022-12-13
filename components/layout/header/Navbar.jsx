@@ -1,34 +1,13 @@
 import Link from "next/link";
 
-import { SunIcon, MoonIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from 'react';
-import { Logo, NavItem, ToggleTheme } from './'
+import { Logo, NavItem, DarkMode } from './'
 
 const MENU_LIST = [
   { text: "Home", href: "/home", active: true },
   { text: "About Us", href: "/about", active: false },
   { text: "Contact", href: "/contact", active: false },
 ];
-
-
-const renderDarkMode = () => {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true),[]);
-
-  const {theme, setTheme} = ToggleTheme();
-
-  if(!mounted) return null;
-  
-  if (theme == "dark") {
-    return (
-      <SunIcon className="mx-1 w-6 text-yellow-500 " role="button" onClick={() => setTheme('light')} />
-    )
-  } else {
-    return (
-      <MoonIcon className="mx-1 w-6 text-gray-900 " role="button" onClick={() => setTheme('dark')} />
-    );
-  }
-};
 
 const Navbar = () => {
   const [navActive, setNavActive] = useState(null);
@@ -73,7 +52,7 @@ const Navbar = () => {
           </div>
 
           <div>
-            {renderDarkMode()}
+            <DarkMode />
           </div>
         </div>
       </div>
