@@ -21,9 +21,9 @@ module.exports = {
   },
   variants: {},
   plugins: [
-    require('tailwindcss'),
-    require('precss'),
-    require('autoprefixer')
+    // require('tailwindcss'),
+    // require('precss'),
+    // require('autoprefixer')
   ],
   darkMode: "class"
 }
