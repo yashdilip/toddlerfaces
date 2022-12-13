@@ -1,8 +1,7 @@
 import "../styles/index.scss";
 import { ThemeProvider } from 'next-themes';
 import Head from "next/head";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import { Header, Footer } from '../components/layout';
 
 export default function App({ Component, pageProps }) {
   return (
@@ -13,11 +12,13 @@ export default function App({ Component, pageProps }) {
           <link rel="icon" href="/favicon.ico" />
         </Head>
         
-        <Navbar />
+        <main>
+          <Header />
 
-        <Component {...pageProps} />
+          <Component {...pageProps} />
 
-        <Footer />
+          <Footer />
+        </main>
       </ThemeProvider>
     </div>
   )

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import ToddlerfacesIcon from "../public/toddlerfaces.png";
+import ToddlerfacesIcon from "../../../public/toddlerfaces.png";
 
 const Logo = () => {
   return (

@@ -1,9 +1,8 @@
 import Link from "next/link";
-import Logo from "./Logo";
-import NavItem from "./NavItem";
-import {SunIcon ,MoonIcon} from "@heroicons/react/24/solid";
-import {useEffect, useState} from 'react';
-import useToggleTheme from "./ToggleTheme";
+
+import { SunIcon, MoonIcon } from "@heroicons/react/24/solid";
+import { useEffect, useState } from 'react';
+import { Logo, NavItem, ToggleTheme } from './'
 
 const MENU_LIST = [
   { text: "Home", href: "/home", active: true },
@@ -13,13 +12,14 @@ const MENU_LIST = [
 
 
 const renderDarkMode = () => {
-  const {systemTheme, theme, setTheme, mounted} = useToggleTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true),[]);
+
+  const {theme, setTheme} = ToggleTheme();
 
   if(!mounted) return null;
-
-  const currentTheme = theme === "systme" ? systemTheme : theme;
   
-  if (currentTheme == "dark") {
+  if (theme == "dark") {
     return (
       <SunIcon className="mx-1 w-6 text-yellow-500 " role="button" onClick={() => setTheme('light')} />
     )
