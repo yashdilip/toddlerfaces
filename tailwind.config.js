@@ -1,3 +1,5 @@
+const defaultTheme = require('tailwindcss/defaultTheme');
+
 module.exports = {
   future: {
     hoverOnlyWhenSupported: true,
@@ -17,13 +19,22 @@ module.exports = {
         wide: { raw: '(min-aspect-ratio: 3 / 2)' },
         'taller-than-854': { raw: '(min-height: 854px)' },
       },
+      fontFamily: {
+        sans: [
+          'Inter',
+          ...defaultTheme.fontFamily.sans
+        ]
+      }
     },
   },
   variants: {},
   plugins: [
-    // require('tailwindcss'),
-    // require('precss'),
-    // require('autoprefixer')
+    {
+      name: 'preset-default',
+      params: {
+        overrides: { removeViewBox: false },
+      },
+    },
   ],
   darkMode: "class"
 }

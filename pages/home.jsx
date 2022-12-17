@@ -16,14 +16,14 @@ export default function Home ({isConnected}) {
   return (
     <div className="flex flex-col justify-center items-center min-h-[calc(min-h-screen_-w-16)]]">
       <h1>Home page { isConnected? "MongoDb": "" }</h1>
-      <div className="grid">
-        {restaurants.map((restaurant) => (
-          <div className="card" key={restaurant._id}>
-            <h2>{restaurant.name}</h2>
-            <p>{restaurant.cuisine}</p>
-          </div>
-        ))}
-      </div>
+        <div className="grid">
+          {restaurants.map((restaurant) => (
+            <div className="card" key={restaurant._id}>
+              <h2>{restaurant.name}</h2>
+              <p>{restaurant.cuisine}</p>
+            </div>
+          ))}
+        </div>        
     </div>
   )
 };
