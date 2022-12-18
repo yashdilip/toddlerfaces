@@ -7,7 +7,7 @@ import { AppProps} from 'next/app';
 export default function App({ Component, pageProps } : AppProps) {
   return (
     <div className="container mx-auto my-10">
-      <ThemeProvider enableSystem={true} attribute="class">
+      <ThemeProvider forcedTheme={Component.theme || undefined} enableSystem={true} attribute="class">
         <Head>
           <title>toddlerface</title>
           <link rel="icon" href="/favicon.ico" />

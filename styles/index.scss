@@ -1,6 +1,6 @@
-@import "~tailwindcss/base";
-@import "~tailwindcss/components";
-@import "~tailwindcss/utilities";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @import "./global.css";
 
@@ -15,6 +15,16 @@
   }
 
   .btn{
-    @apply inline-block px-4 py-2 rounded hover:bg-blue-600 transition duration-300 shadow-lg bg-blue-500 text-white capitalize tracking-wider focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50 whitespace-nowrap
+    @apply inline-block px-4 py-2 narrow:px-1 narrow:py-1 rounded hover:bg-blue-600 transition duration-300 shadow-lg bg-blue-500 text-white capitalize tracking-wider focus:outline-none focus:ring-4 focus:ring-indigo-500 focus:ring-opacity-50 whitespace-nowrap
+  }
+}
+
+@layer utilities {
+  .section-min-height {
+      min-height: calc(100vh - 68px)
+  }
+
+  .toggle-btn {
+      @apply [&>div::before]:translate-y-0 [&>div::before]:rotate-45 [&>div::after]:translate-y-0 [&>div::after]:-rotate-45 [&>div]:bg-transparent dark:[&>div]:bg-black [&>div]:rotate-[720deg]
   }
 }

@@ -15,9 +15,23 @@ module.exports = {
         highlight: 'inset 0 0 0 1px rgba(255, 255, 255, 0.05)',
       },
       screens: {
-        narrow: { raw: '(max-aspect-ratio: 3 / 2)' },
-        wide: { raw: '(min-aspect-ratio: 3 / 2)' },
+        'mobile': '475px',
+        'tablet': '640px',  
+        'laptop': '1024px',  
+        'desktop': '1280px',
+        'narrow': { raw: '(max-aspect-ratio: 13/20)' },
+        'wide': { raw: '(min-aspect-ratio: 3/2)' },
         'taller-than-854': { raw: '(min-height: 854px)' },
+      },
+      keyframes: {
+        'open-menu': {
+          '0%': { transform: 'scaleY(0)'},
+          '80%': { transform: 'scaleY(1.2)'},
+          '100%': { transform: 'scaleY(1)'},
+        }
+      },
+      animation: {
+        'open-menu': 'open-menu 0.5s ease-in-out forwards',
       },
       fontFamily: {
         sans: [
