@@ -2,7 +2,6 @@ import Link from "next/link";
 
 import { useState } from 'react';
 import { Logo, NavItem, DarkMode } from './'
-import Burger from '../../icons/Burger';
 
 const MENU_LIST = [
   { text: "Home", href: "/home", active: true },
