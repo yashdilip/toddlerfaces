@@ -1,7 +1,7 @@
 import Link from "next/link";
-
 import { useState } from 'react';
 import { Logo, NavItem, DarkMode } from './'
+import { useSession, signIn, signOut } from 'next-auth/react';
 
 const MENU_LIST = [
   { text: "Home", href: "/home", active: true },
@@ -28,6 +28,7 @@ if (typeof window !== "undefined") {
 }
 
 const Navbar = () => {
+  const { data: session } = useSession();  
   const [navActive, setNavActive] = useState(null);
   const [activeIdx, setActiveIdx] = useState(-1);
 
@@ -57,17 +58,21 @@ const Navbar = () => {
           }
         </div>
         <div className="flex items-center">
-          <a
-            href="/api/login"
-            className="btn"
-          >Login
-          </a>
 
-          <a
-            href="/api/logout"
-            className="btn"
-          >Logout
-          </a>
+          { session && 
+            <a
+              className="btn"
+              onClick={() => signOut()}
+            >Sign Out
+            </a>
+          }
+          { !session && 
+            <a
+              className="btn"
+              onClick={()=>signIn()}
+            >Sign In
+            </a>
+          }
           <DarkMode />
 
           <button id="hamburger-btn" className="relative mx-1 w-8 h-8 md:hidden cursor-pointer text-3xl">

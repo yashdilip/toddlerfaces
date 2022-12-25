@@ -2,9 +2,13 @@ import "../styles/index.scss";
 import { ThemeProvider } from 'next-themes';
 import Head from "next/head";
 import { Header, Footer } from '../components/layout';
-import { AppProps} from 'next/app';
+import { AppProps } from 'next/app';
+import { SessionProvider } from 'next-auth/react';
 
-export default function App({ Component, pageProps } : AppProps) {
+export default function App({
+  Component, 
+  pageProps: {session, ...pageProps}
+} : AppProps) {
   return (
     <div className="container mx-auto my-10">
       <ThemeProvider forcedTheme={Component.theme || undefined} enableSystem={true} attribute="class">
@@ -14,11 +18,13 @@ export default function App({ Component, pageProps } : AppProps) {
         </Head>
         
         <main>
-          <Header />
+          <SessionProvider>
+            <Header />
 
-          <Component {...pageProps} />
+            <Component {...pageProps} />
 
-          <Footer />
+            <Footer />
+          </SessionProvider>
         </main>
       </ThemeProvider>
     </div>
