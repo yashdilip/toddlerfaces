@@ -2,6 +2,7 @@ import Link from "next/link";
 import { useState } from 'react';
 import { Logo, NavItem, DarkMode } from './'
 import { useSession, signIn, signOut } from 'next-auth/react';
+import { useRouter } from 'next/router';
 
 const MENU_LIST = [
   { text: "Home", href: "/home", active: true },
@@ -28,7 +29,11 @@ if (typeof window !== "undefined") {
 }
 
 const Navbar = () => {
-  const { data: session } = useSession();  
+  const { push, asPath} = useRouter();
+  const { data: session } = useSession();
+
+  const handleSignIn = () => push(`/auth/signin?callbackUrl=${asPath}`)
+
   const [navActive, setNavActive] = useState(null);
   const [activeIdx, setActiveIdx] = useState(-1);
 
@@ -69,7 +74,7 @@ const Navbar = () => {
           { !session && 
             <a
               className="btn"
-              onClick={()=>signIn()}
+              onClick={()=>handleSignIn()}
             >Sign In
             </a>
           }

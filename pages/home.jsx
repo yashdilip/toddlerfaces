@@ -23,7 +23,7 @@ export default function Home ({isConnected}) {
       <h1>Home page { isConnected? "MongoDb": "" }</h1>
       { status == 'authenticated' &&
         <div className="grid">
-        <h2>Welcome, {session.user.name}</h2>
+        <h2>Welcome, {session.user.name} Role, {session.user.role}</h2>
           {restaurants.map((restaurant) => (
             <div className="card" key={restaurant._id}>
               <h2>{restaurant.name}</h2>
