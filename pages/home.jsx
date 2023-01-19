@@ -1,12 +1,9 @@
-import clientPromise from "../lib/mongodb";
 import { useEffect, useState } from 'react';
-import { unstable_getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]";
 import { useSession } from 'next-auth/react';
 
 
-export default function Home ({isConnected}) {
-  const [restaurants, setRestaurants] = useState([]);
+export default function Home () {
+  const [users, setUsers] = useState([]);
   const { data: session, status } = useSession();
 
   useEffect(() => {
@@ -14,20 +11,20 @@ export default function Home ({isConnected}) {
       async () => {
         const results = await fetch("/api/list");
         const resultsJson = await results.json();
-        setRestaurants(resultsJson);
+        setUsers(resultsJson);
       })();
   }, []);
 
   return (
     <div className="flex flex-col justify-center items-center min-h-[calc(min-h-screen_-w-16)]]">
-      <h1>Home page { isConnected? "MongoDb": "" }</h1>
+      <h1>Home page MongoDb</h1>
       { status == 'authenticated' &&
         <div className="grid">
         <h2>Welcome, {session.user.name} Role, {session.user.role}</h2>
-          {restaurants.map((restaurant) => (
-            <div className="card" key={restaurant._id}>
-              <h2>{restaurant.name}</h2>
-              <p>{restaurant.cuisine}</p>
+          {users.map((user) => (
+            <div className="card" key={user._id}>
+              <h2>{user.name}</h2>
+              <p>{user.email}</p>
             </div>
           ))}
         </div>
@@ -35,21 +32,3 @@ export default function Home ({isConnected}) {
     </div>
   )
 };
-
-export async function getServerSideProps(context) {
-  const session = await unstable_getServerSession(context.req, context.res, authOptions);
-
-  try {
-    await clientPromise;
-
-    return {
-      props: { isConnected: true, session}
-    }
-  } catch (error) {
-    console.error(error);
-
-    return {
-      props: { isConnected: false, session}
-    }
-  }
-}

@@ -2,6 +2,19 @@ import NextAuth from "next-auth"
 import GithubProvider from "next-auth/providers/github"
 
 import CredentialsProvider from "next-auth/providers/credentials"
+import clientPromise from "../../../lib/mongodb";
+import { MongoDBAdapter } from "@next-auth/mongodb-adapter"
+import { dbConnect } from "../../../lib/db-connect";
+import bcrypt from "bcrypt";
+import User from "../../../models/user";
+
+const validateAllOnce = (fields) => {
+  for (let key in fields) {
+    if (fields[key].trim() === "") {
+      throw new Error(`${key} required`)
+    }
+  }
+}
 
 export const authOptions = {
   // Configure one or more authentication providers
@@ -10,44 +23,55 @@ export const authOptions = {
       clientId: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET,
     }),
-    // CredentialsProvider({
-    //   // The name to display on the sign in form (e.g. 'Sign in with...')
-    //   name: 'Credentials',
-    //   // The credentials is used to generate a suitable form on the sign in page.
-    //   // You can specify whatever fields you are expecting to be submitted.
-    //   // e.g. domain, username, password, 2FA token, etc.
-    //   // You can pass any HTML attribute to the <input> tag through the object.
-    //   credentials: {
-    //     username: { label: "Username", type: "text", placeholder: "jsmith" },
-    //     password: {  label: "Password", type: "password" }
-    //   },
-    //   async authorize(credentials, req) {
-    //     // You need to provide your own logic here that takes the credentials
-    //     // submitted and returns either a object representing a user or value
-    //     // that is false/null if the credentials are invalid.
-    //     // e.g. return { id: 1, name: 'J Smith', email: 'jsmith@example.com' }
-    //     // You can also use the `req` object to obtain additional parameters
-    //     // (i.e., the request IP address)
-    //     const res = await fetch("/your/endpoint", {
-    //       method: 'POST',
-    //       body: JSON.stringify(credentials),
-    //       headers: { "Content-Type": "application/json" }
-    //     })
-    //     const user = await res.json()
-  
-    //     // If no error and we have user data, return it
-    //     if (res.ok && user) {
-    //       return user
-    //     }
-    //     // Return null if user data could not be retrieved
-    //     return null
-    //   }
-    // })
+    CredentialsProvider({
+      name: 'Credentials',
+      async authorize(credentials, req) {
+        const { email, username, password } = credentials;
+
+        console.log({ email, username, password });
+
+        validateAllOnce({ email, username, password });
+
+        //db connect
+        await dbConnect();
+
+        const user = await User.findOne({ email }).exec();
+
+        if (!user) {
+          throw new Error("Something went wrong");
+        }
+
+        const userDoc = user._doc;
+        const isMatched = await bcrypt.compare(password, userDoc.password);
+
+        if (user && isMatched) {
+          // Any object returned will be saved in `user` property of the JWT
+          delete userDoc.password;
+          return userDoc;
+        } else {
+          // If you return null or false then the credentials will be rejected
+          //return null
+          // You can also Reject this callback with an Error or with a URL:
+          // throw new Error("error message") // Redirect to error page
+          throw new Error("Email or Password Incorrect..!");
+          // Redirect to a URL
+        }
+      },
+      credentials: {},
+    })
   ],
   pages: {
     signIn: '/auth/signin'
   },
-  secret: process.env.SECRET
+  debug: process.env.NODE_ENV === "development",
+  adapter: MongoDBAdapter(clientPromise),
+  session: {
+    strategy: "jwt",
+  },
+  jwt: {
+    secret: process.env.JWT_SECRET,
+  },
+  secret: process.env.SECRET,
 }
 
 export default NextAuth(authOptions)

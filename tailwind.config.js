@@ -28,10 +28,16 @@ module.exports = {
           '0%': { transform: 'scaleY(0)'},
           '80%': { transform: 'scaleY(1.2)'},
           '100%': { transform: 'scaleY(1)'},
-        }
+        },
+
+        show: {
+          "0%, 49.99%": { opacity: 0, "z-index": 10 },
+          "50%, 100%": { opacity: 1, "z-index": 50 },
+        },
       },
       animation: {
         'open-menu': 'open-menu 0.5s ease-in-out forwards',
+        show: "show 0.7s",
       },
       fontFamily: {
         sans: [
