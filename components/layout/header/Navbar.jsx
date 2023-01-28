@@ -32,7 +32,7 @@ const Navbar = () => {
   const { push, asPath} = useRouter();
   const { data: session } = useSession();
 
-  const handleSignIn = () => push(`/auth/signin?callbackUrl=${asPath}`)
+  const handleSignIn = () => push(`/auth-page?callbackUrl=${asPath}`)
 
   const [navActive, setNavActive] = useState(null);
   const [activeIdx, setActiveIdx] = useState(-1);

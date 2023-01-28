@@ -13,7 +13,7 @@ export default async function handler(request, response) {
       return response.status(404).json({message: "Don't have form data...!"})
     }
 
-    const { name, email, password } = request.body;
+    const { username, email, password } = request.body;
 
     const checkExiting = await User.findOne({ email })
 
@@ -24,7 +24,7 @@ export default async function handler(request, response) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const user = new User({name, email, password:hashedPassword})
+    const user = new User({username, email, password:hashedPassword})
 
     const validationError = user.validateSync();
     if (validationError) {
