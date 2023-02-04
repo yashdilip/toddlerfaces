@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import axios from 'axios';
-import Profile from "../components/profile"
+import { UserProfile } from "../components"
 
 export default function Home () {
   const [users, setUsers] = useState([]);
@@ -20,7 +20,7 @@ export default function Home () {
   return (
     <div className="grid grid-cols-3 gap-4">
       {users.map((user) => (
-        <Profile user={user} key={user._id}/>
+        <UserProfile user={user} key={user._id} />
       ))}
     </div>
   )
