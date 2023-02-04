@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import AlbumTile from './AlbumTile';
+import AlbumTile from '../album/albumTile';
 import { fetchAlbums, onCreateAlbum, onUpdateAlbum, onDeleteAlbum } from '../../service/album-service';
 
 const AlbumTiles = () => {
