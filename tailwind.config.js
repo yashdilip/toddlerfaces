@@ -19,9 +19,6 @@ module.exports = {
         'tablet': '640px',  
         'laptop': '1024px',  
         'desktop': '1280px',
-        'narrow': { raw: '(max-aspect-ratio: 13/20)' },
-        'wide': { raw: '(min-aspect-ratio: 3/2)' },
-        'taller-than-854': { raw: '(min-height: 854px)' },
       },
       keyframes: {
         'open-menu': {
@@ -48,13 +45,6 @@ module.exports = {
     },
   },
   variants: {},
-  plugins: [
-    {
-      name: 'preset-default',
-      params: {
-        overrides: { removeViewBox: false },
-      },
-    },
-  ],
+  plugins: [],
   darkMode: "class"
 }

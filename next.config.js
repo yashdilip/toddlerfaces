@@ -3,14 +3,18 @@ const path = require('path')
 
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true,
   images: {
     formats: ['image/avif', 'image/webp'],
-    domains: ['res.cloudinary.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+      },
+    ],
   },
   trailingSlash: true,
-	sassOptions: {
-		includePaths: [path.join(__dirname, 'styles')]
+  sassOptions: {
+    includePaths: [path.join(__dirname, 'styles')]
   },
   webpack(config) {
     config.module.rules.push({

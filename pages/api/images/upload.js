@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage }).single('file')
 
-export default async (req, res) => {
+const uploadImageHandler = async (req, res) => {
   upload(req, res, (error) => {
     if (error) {
       console.error(error)
@@ -34,4 +34,5 @@ export default async (req, res) => {
   })
 }
 
+export default uploadImageHandler
 

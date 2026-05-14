@@ -87,7 +87,7 @@ const Album = () => {
               <input {...getInputProps()} />
               <div className="text-center">
                 <FaPlus size={32} className="text-gray-600 mx-auto"/>
-                <p>Drag 'n' drop images here, or click to select images to upload</p>
+                <p>Drag and drop images here, or click to select images to upload</p>
               </div>
             </div>
           </section>

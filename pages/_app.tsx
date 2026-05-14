@@ -1,4 +1,4 @@
-import "../styles/index.scss";
+import "../styles/index.css";
 import { ThemeProvider } from 'next-themes';
 import Head from "next/head";
 import { Header, Footer } from '../components/layout';
