@@ -1,41 +1,31 @@
 import { useEffect, useState } from 'react';
 import { useTheme } from 'next-themes'
-import { Image } from 'next/image'
 import { BsFillSunFill, BsFillMoonStarsFill } from 'react-icons/bs';
 
 const DarkMode = () => {
-  const [ mounted, setMounted ] = useState(false)
-  const { theme, setTheme } = useTheme()
-  let { resolvedTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+  const { resolvedTheme, setTheme } = useTheme()
 
-  useEffect(() => {
-    setTheme(theme);
-  }, [theme])
-
-  // useEffect only runs on the client, so now we can safely show the UI
   useEffect(() => {
     setMounted(true)
   }, [])
 
   if (!mounted) {
-    return <></>
+    return <span className="h-10 w-10" aria-hidden="true" />
   }
 
-  let icon
+  const isDark = resolvedTheme === "dark"
 
-  switch (resolvedTheme) {
-    case 'light':
-      icon = <BsFillMoonStarsFill className="mx-1 w-6 text-gray-900 " role="button" onClick={() => setTheme('dark')} />
-      break
-    case 'dark':
-      icon = <BsFillSunFill className="mx-1 w-6 text-yellow-500" role="button" onClick={() => setTheme('light')} />
-      break
-    default:
-      icon = <Image alt="system" src='data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7' width={400} height={400} />
-      break
-  }
-
-  return icon;
+  return (
+    <button
+      className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-gray-200 text-gray-700 transition hover:bg-gray-100 dark:border-gray-800 dark:text-gray-200 dark:hover:bg-gray-900"
+      onClick={() => setTheme(isDark ? 'light' : 'dark')}
+      aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
+      type="button"
+    >
+      {isDark ? <BsFillSunFill className="text-yellow-400" /> : <BsFillMoonStarsFill />}
+    </button>
+  )
 };
 
 export default DarkMode;

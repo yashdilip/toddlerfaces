@@ -3,17 +3,15 @@ import ToddlerfacesIcon from "../../../public/toddlerfaces.png";
 
 const Logo = () => {
   return (
-    <>
-      <div className="flex flex-col items-center">
+      <div className="flex items-center gap-2">
         <Image
           src={ToddlerfacesIcon}
-          className="w-12 h-12"
+          className="h-10 w-10 rounded-md"
           alt="toddlerfaces"
         >
         </Image>
-        <span>toddlerfaces</span>
+        <span className="text-base font-bold text-gray-950 dark:text-white">Toddlerfaces</span>
       </div>
-    </>
   )
 };
 

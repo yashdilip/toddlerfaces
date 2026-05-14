@@ -6,16 +6,25 @@ import {
   deleteAlbum
 } from  './albums'
 import { dbConnect } from "../../../lib/db-connect";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]";
 
 
 export default async function handler(req, res) {
-  dbConnect().catch(error => response.json({ message: "Connection Failed...!"}))
+  try {
+    await dbConnect();
+  } catch (error) {
+    return res.status(500).json({ message: "Connection failed." });
+  }
+
+  const session = await getServerSession(req, res, authOptions);
+  req.sessionUser = session?.user || null;
 
   const { method } = req
 
   switch (method.toUpperCase()) {
     case 'GET':
-      if (req && req.params && req.params.id) {
+      if (req?.query?.id) {
         return getAlbumById(req, res);
       }
       return getAlbums(req, res);

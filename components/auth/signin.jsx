@@ -1,184 +1,80 @@
 import React, { useState } from 'react'
-import Router, { useRouter } from 'next/router'
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import { HiUser, HiEye, HiEyeSlash } from "react-icons/hi2"
-import { HiOutlineMail } from "react-icons/hi";
-import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { useFormik } from "formik"
+import * as Yup from "yup"
 import { useSession, signIn } from 'next-auth/react'
-import { BsGithub } from 'react-icons/bs'
 
-const providers = [
-  {
-    name: 'github',
-    Icon: BsGithub
-  }
-]
+const fieldClass = "mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 shadow-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
+const labelClass = "text-sm font-medium text-gray-700 dark:text-gray-200"
 
 const SignIn = (props) => {
   const { data: session, status } = useSession()
-  const [show, setShow] = useState({ password: false })
-
+  const [serverError, setServerError] = useState('')
   const { push } = useRouter()
-  const redirectToHome = () => {
-    const { pathname } = Router;
-
-    if (pathname === "/auth-page")
-      push("/home")
-  }
-
-  const handleOAuthSignIn = (provider) => () => signIn(provider) 
 
   const formik = useFormik({
     initialValues: {
-      username: '',
       email: '',
       password: '',
     },
     onSubmit: async values => {
-      try {
-        
-        const response = await signIn("credentials", {
-          ...values,
-          redirect: false,
-          callbackUrl: `${window.location.origin}`
-        })
-    
-        response.error ? console.log(response.error) : redirectToHome()
+      setServerError('')
+      const response = await signIn("credentials", {
+        ...values,
+        redirect: false,
+      })
 
-      } catch (error) {
-        console.error(error);
-        // Handle sign in error
-      }
+      response?.error ? setServerError("Email or password is incorrect.") : push("/home")
     },
     validationSchema: Yup.object({
-      username: Yup.string().required('Username is required'),
-      email: Yup.string()
-        .email('Invalid email address')
-        .required('Email is required'),
+      email: Yup.string().email('Invalid email address').required('Email is required'),
       password: Yup.string().required('Password is required'),
     }),
-  });
+  })
 
-  if (status === 'loading') return <p>Checking Authentication...</p>
-
-  if (session) {
-    redirectToHome()
-  }
-  
+  if (status === 'loading') return <p className="text-sm text-gray-600 dark:text-gray-300">Checking authentication...</p>
+  if (session) push("/home")
 
   return (
-    <form onSubmit={formik.handleSubmit} className="bg-white p-6 rounded-lg w-full max-w-lg dark:bg-black">
-      <h1 className="flex items-center justify-center mb-4 text-lg font-medium">Sign In</h1>
-
-      <hr className="border-1 border-gray-500 mb-4" />
-
-      <div className="mb-4">
-        {
-          providers.map(({ name, Icon }) => (
-            <div className="flex" key={name}>
-              <button type="button" className="w-full uppercase text-white bg-[#24292F] hover:bg-[#24292F]/90 focus:ring-4 focus:outline-none focus:ring-[#24292F]/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center justify-center dark:focus:ring-gray-500 dark:hover:bg-[#050708]/30 mr-2 mb-2"
-                onClick={handleOAuthSignIn(name)}
-              >
-                <Icon className="mr-5" />
-                Sign in with {name}
-              </button>
-            </div>
-          ))
-        }
+    <form onSubmit={formik.handleSubmit} className="w-full rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-950">
+      <div className="mb-6">
+        <p className="text-sm font-semibold uppercase tracking-wide text-indigo-600 dark:text-indigo-400">Welcome back</p>
+        <h1 className="mt-1 text-2xl font-bold text-gray-950 dark:text-white">Sign in to Toddlerfaces</h1>
+        <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
+          Parents, photographers, and database-promoted admins can sign in here.
+        </p>
       </div>
 
-      <div className="relative py-4">
-        <div className="absolute inset-0 flex items-center">
-          <div className="w-full border-b border-gray-500"></div>
+      {serverError && (
+        <div className="mb-4 rounded-md border border-red-200 bg-red-50 p-3 text-sm text-red-700 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
+          {serverError}
         </div>
-        <div className="relative flex justify-center">
-          <span className="bg-white px-4 text-sm italic">Or</span>
-        </div>
-      </div>
+      )}
 
-      <div className="mb-4">
-        <label htmlFor="username" className="justify-left mb-2 text-sm font-medium text-gray-900 dark:text-white">Username</label>
-        <div className="flex">
-          <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-            <HiUser size={25} />
-          </span>
-          <input
-            id="username"
-            name="username"
-            type="text"
-            placeholder="John Doe"
-            className={`${formik.errors.username ? 'border-red-500':''} rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.username}
-          />
-          {formik.touched.username && formik.errors.username ? (
-            <div className="text-red-500">{formik.errors.username}</div>
-          ) : null}
+      <div className="space-y-4">
+        <div>
+          <label htmlFor="email" className={labelClass}>Email</label>
+          <input id="email" name="email" type="email" className={fieldClass} onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.email} />
+          {formik.touched.email && formik.errors.email && <p className="mt-1 text-xs text-red-600 dark:text-red-400">{formik.errors.email}</p>}
+        </div>
+
+        <div>
+          <label htmlFor="password" className={labelClass}>Password</label>
+          <input id="password" name="password" type="password" className={fieldClass} onChange={formik.handleChange} onBlur={formik.handleBlur} value={formik.values.password} />
+          {formik.touched.password && formik.errors.password && <p className="mt-1 text-xs text-red-600 dark:text-red-400">{formik.errors.password}</p>}
         </div>
       </div>
 
-      <div className="mb-4">
-        <label htmlFor="email" className="justify-left mb-2 text-sm font-medium text-gray-900 dark:text-white">Your Email</label>
-        <div className="flex">
-          <span className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
-            <HiOutlineMail size={25} />
-          </span>
-          <input
-            id="email"
-            name="email"
-            type="text"
-            placeholder="example@email.com"
-            className={`${formik.errors.email ? 'border-red-500':''} rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.email}
-          />
-          {formik.touched.email && formik.errors.email ? (
-            <div className="text-red-500">{formik.errors.email}</div>
-          ) : null}
-        </div>
-      </div>
+      <button className="mt-6 w-full rounded-md bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500/30" type="submit">
+        Sign in
+      </button>
 
-      <div className="mb-4">
-        <label htmlFor="password" className="justify-left mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-        <div className="flex">
-          <span 
-            className="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-l-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600"
-            onClick={() => setShow({ ...show, password: !show.password})}
-          >
-            {show.password ? <HiEye size={25} /> : <HiEyeSlash size={25} />}
-          </span>
-          <input
-            id="password"
-            name="password"
-            type={`${show.password ? "text" : "password"}`}
-            placeholder="********"
-            className={`${formik.errors.password ? 'border-red-500':''} rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.password}
-          />
-          {formik.touched.password && formik.errors.password ? (
-            <div className="text-red-500">{formik.errors.password}</div>
-          ) : null}
-        </div>
-      </div>
-
-      <div className="flex items-center justify-center mb-4">
-        <button className="bg-indigo-500 text-white py-2 px-4 rounded-lg hover:bg-indigo-600" type="submit">
-          Sign In
-        </button>
-      </div>
-      <div className="flex items-center justify-center text-sm font-medium text-gray-500 dark:text-gray-300">
-        Not registered?  
-        <Link href="#" legacyBehavior>
-          <a className='text-blue-700 hover:underline dark:text-blue-500' onClick={() => props.toggleForm()}>Sign Up</a>
-        </Link>
-      </div>
+      <p className="mt-5 text-center text-sm text-gray-600 dark:text-gray-300">
+        Need an account?{' '}
+        <button type="button" className="font-medium text-indigo-600 dark:text-indigo-400" onClick={() => props.toggleForm()}>Create one</button>
+      </p>
     </form>
-  );
+  )
 }
 
-export default SignIn;
+export default SignIn

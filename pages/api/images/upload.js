@@ -1,38 +1,19 @@
 export const config = {
   api: {
-      bodyParser: {
-          sizeLimit: '4mb' // Set desired value here
-      }
-  }
+    bodyParser: false,
+  },
 }
-import { v4 as uuidv4 } from 'uuid'
-import multer from 'multer'
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'public/images/')
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${uuidv4()}-${file.originalname}`)
-  },
-})
-
-const upload = multer({ storage }).single('file')
 
 const uploadImageHandler = async (req, res) => {
-  upload(req, res, (error) => {
-    if (error) {
-      console.error(error)
-      return res.status(500).send({ error: error.message })
-    }
+  if (process.env.ENABLE_LOCAL_DEV_UPLOADS !== "true") {
+    return res.status(410).json({
+      message: "Local binary uploads are disabled. Toddlerfaces production storage uses external media references so original child photos stay in parent or photographer controlled storage.",
+    })
+  }
 
-    if (!req.file) {
-      return res.status(400).send({ error: 'File is required' })
-    }
-
-    res.status(200).send({ id: req.file.filename, path: req.file.path })
+  return res.status(501).json({
+    message: "Local development uploads are intentionally not implemented in the production path. Use /api/images with an external sourceUrl.",
   })
 }
 
 export default uploadImageHandler
-

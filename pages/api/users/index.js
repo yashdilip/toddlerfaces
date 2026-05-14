@@ -9,7 +9,11 @@ import { dbConnect } from "../../../lib/db-connect";
 
 
 export default async function handler(req, res) {
-  dbConnect().catch(error => response.json({ message: "Connection Failed...!"}))
+  try {
+    await dbConnect();
+  } catch (error) {
+    return res.status(500).json({ message: "Connection failed." });
+  }
 
   const { method } = req
 

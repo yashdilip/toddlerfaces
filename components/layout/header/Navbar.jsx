@@ -1,137 +1,83 @@
 import Link from "next/link";
 import { useState } from 'react';
-import { Logo, NavItem, DarkMode } from './'
-import { useSession, signIn, signOut } from 'next-auth/react';
+import { Logo, DarkMode } from './'
+import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/router';
 
 const MENU_LIST = [
-  { text: "Home", href: "/home", active: true },
-  { text: "About Us", href: "/about", active: false },
-  { text: "Contact", href: "/contact", active: false },
+  { text: "Albums", href: "/" },
+  { text: "Dashboard", href: "/dashboard" },
+  { text: "About", href: "/about" },
+  { text: "Storage", href: "/storage-strategy" },
+  { text: "Safety", href: "/safety" },
+  { text: "Contact", href: "/contact" },
 ];
 
-const initApp = () => {
-  const hamburgerBtn = document.getElementById('hamburger-btn');
-  const mobileMenu = document.getElementById('mobile-menu');
-
-  const toggleMenu = () => {
-    mobileMenu.classList.toggle('hidden')
-    mobileMenu.classList.toggle('flex')
-    hamburgerBtn.classList.toggle('toggle-btn')
-  }
-
-  hamburgerBtn.addEventListener('click', toggleMenu)
-  mobileMenu.addEventListener('click', toggleMenu)
-}
-
-if (typeof window !== "undefined") {
-  document.addEventListener("DOMContentLoaded", initApp);
-}
+const linkClass = (active) =>
+  `rounded-md px-3 py-2 text-sm font-medium transition ${
+    active
+      ? "bg-indigo-50 text-indigo-700 dark:bg-indigo-950 dark:text-indigo-200"
+      : "text-gray-700 hover:bg-gray-100 hover:text-gray-950 dark:text-gray-200 dark:hover:bg-gray-900 dark:hover:text-white"
+  }`
 
 const Navbar = () => {
-  const { push, asPath} = useRouter();
+  const { asPath, push } = useRouter();
   const { data: session } = useSession();
+  const [navActive, setNavActive] = useState(false);
 
   const handleSignIn = () => push(`/auth-page?callbackUrl=${asPath}`)
 
-  const [navActive, setNavActive] = useState(null);
-  const [activeIdx, setActiveIdx] = useState(-1);
-
   return (
-    <nav className="flex justify-between items-center p-4 bg-gray-100 dark:bg-black">
-      <Link href={"/"}>
-        <Logo></Logo>
-      </Link>
-      <div
-        onClick={() => setNavActive(!navActive)}
-        className="flex py-4 cursor-pointer"
-      >
-        <div className={`${navActive ? "active" : ""} text-lg hidden md:inline-flex items-center mx-7 w-[calc(min-h-screen_-w-16)]`}>
-          {
-            MENU_LIST.map((menu, idx) => (
-              <div
-                onClick={() => {
-                  setActiveIdx(idx);
-                  setNavActive(false);
-                }}
-                key={menu.text}
-                className="px-2"
-              >
-                <NavItem active={activeIdx === idx} {...menu} />
-              </div>
-            ))
-          }
+    <nav className="sticky top-0 z-40 border-b border-gray-200 bg-white/95 px-4 py-3 backdrop-blur dark:border-gray-800 dark:bg-gray-950/95">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
+        <Link href="/" aria-label="Toddlerfaces home">
+          <Logo />
+        </Link>
+
+        <div className="hidden items-center gap-1 md:flex">
+          {MENU_LIST.map((menu) => (
+            <Link href={menu.href} key={menu.text} className={linkClass(asPath === menu.href)}>
+              {menu.text}
+            </Link>
+          ))}
         </div>
-        <div className="flex items-center">
 
-          { session && 
-            <a
-              className="btn"
-              onClick={() => signOut()}
-            >Sign Out
-            </a>
-          }
-          { !session && 
-            <a
-              className="btn"
-              onClick={()=>handleSignIn()}
-            >Sign In
-            </a>
-          }
+        <div className="flex items-center gap-2">
+          {session?.user?.role && (
+            <span className="hidden rounded-full border border-gray-200 px-3 py-1 text-xs font-medium capitalize text-gray-600 dark:border-gray-800 dark:text-gray-300 sm:inline-flex">
+              {session.user.role}
+            </span>
+          )}
+          {session ? (
+            <button className="rounded-md bg-gray-900 px-3 py-2 text-sm font-semibold text-white transition hover:bg-gray-700 dark:bg-white dark:text-gray-950 dark:hover:bg-gray-200" onClick={() => signOut()}>
+              Sign out
+            </button>
+          ) : (
+            <button className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700" onClick={handleSignIn}>
+              Sign in
+            </button>
+          )}
           <DarkMode />
-
-          <button id="hamburger-btn" className="relative mx-1 w-8 h-8 md:hidden cursor-pointer text-3xl">
-            <div className="absolute top-4 -mt-0.5 h-1 w-8 rounded bg-black dark:bg-white transition-all duration-500 
-              before:absolute 
-              before:h-1 
-              before:w-8 
-              before:-translate-x-4 
-              before:-translate-y-3 
-              before:rounded 
-              before:bg-black dark:before:bg-white
-              before:transition-all 
-              before:duration-500 
-              before:content-[''] 
-              after:absolute 
-              after:h-1 
-              after:w-8 
-              after:-translate-x-4 
-              after:translate-y-3 
-              after:rounded 
-              after:bg-black dark:after:bg-white
-              after:transition-all 
-              after:duration-500 
-              after:content-['']"
-              >
-            </div>
+          <button
+            className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-gray-200 text-gray-700 md:hidden dark:border-gray-800 dark:text-gray-200"
+            onClick={() => setNavActive(!navActive)}
+            aria-label="Open navigation"
+            aria-expanded={navActive}
+          >
+            <span className="text-xl">{navActive ? "x" : "="}</span>
           </button>
         </div>
-
-        <section id="mobile-menu" className="absolute top-32 right-0 bg-gray-300 dark:bg-black w-full flex-col justify-content-center origin-top animate-open-menu hidden">
-            {/* <button className="text-8xl self-end px-6">
-              &times;
-            </button> */}
-            <nav className="flex flex-col min-h-screen text-center py-8 " aria-label="mobile">
-              <div className={`${navActive ? "active" : ""} inline-block text-5xl mx-7 w-[calc(min-h-screen_-w-16)]`}>
-              {
-                MENU_LIST.map((menu, idx) => (
-                  <div
-                    onClick={() => {
-                      setActiveIdx(idx);
-                      setNavActive(false);
-                    }}
-                    key={menu.text}
-                    className="py-6"
-                  >
-                    <NavItem active={activeIdx === idx} {...menu} className="w-full hover:opacity-90"/>
-                  </div>
-                ))
-              }
-            </div>
-          </nav>
-
-        </section>
       </div>
+
+      {navActive && (
+        <div className="mx-auto mt-3 grid max-w-7xl gap-1 border-t border-gray-200 pt-3 md:hidden dark:border-gray-800">
+          {MENU_LIST.map((menu) => (
+            <Link href={menu.href} key={menu.text} className={linkClass(asPath === menu.href)} onClick={() => setNavActive(false)}>
+              {menu.text}
+            </Link>
+          ))}
+        </div>
+      )}
     </nav>
   )
 };

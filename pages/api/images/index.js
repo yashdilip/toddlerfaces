@@ -1,69 +1,41 @@
 import {
-  createUser,
-  getUsers,
-  getUserById,
-  updateUser,
-  deleteUser
+  createImageReference,
+  getImageById,
+  getImagesByAlbumId,
+  updateImage,
 } from  './images'
 import { dbConnect } from "../../../lib/db-connect";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]";
 
 
 export default async function handler(req, res) {
-  dbConnect().catch(error => response.json({ message: "Connection Failed...!"}))
+  try {
+    await dbConnect();
+  } catch (error) {
+    return res.status(500).json({ message: "Connection failed." });
+  }
 
-  /* const { method } = req
+  const session = await getServerSession(req, res, authOptions);
+  req.sessionUser = session?.user || null;
+
+  const { method, query } = req;
 
   switch (method.toUpperCase()) {
     case 'GET':
-      if (req && req.params && req.params.id) {
+      if (query.id) {
         return getImageById(req, res);
       }
-      return getImages(req, res);
+      return getImagesByAlbumId(req, res);
     case 'POST':
-      return createImage(req, res);
+      return createImageReference(req, res);
     case 'PUT':
       return updateImage(req, res);
-    case 'DELETE':
-      return deleteImage(req, res);
     default:
-      res.setHeader('Allow', ['GET', 'POST', 'PUT', 'DELETE']);
-
-      res.status(405).send({
+      res.setHeader('Allow', ['GET', 'POST', 'PUT']);
+      return res.status(405).json({
         success: false,
         message: 'Method Not Allowed'
       });
-      break;
-  }*/
-
-  const { method, path } = req
-
-  switch(method) {
-    case 'GET':
-      switch(path) {
-        case '/foo':
-          getImageById(req, res);
-          break;
-        case '/bar':
-          getImages(req,res)
-          break;
-      }
-      break;
-    case 'POST':
-      switch(path) {
-        case '/foo/bar':
-          getImageById(req, res);
-          break;
-        case '/bar/foo':
-          getImages(req,res)
-          break;
-      }
-      break;
-  }
-
-  switch(req.body.action) {
-    case 'create':
-      handleCreate(req, res);
-      break;
-    break;
   }
 }

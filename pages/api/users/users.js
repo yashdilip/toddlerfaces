@@ -5,7 +5,7 @@ export const getUsers = async (req, res) => {
     const users = await User
            .find()
            .limit(10);
-    response.status(200).json(users);
+    res.status(200).json(users);
   } catch (err) {
     res.status(400).json({ message: 'Failed to retrieve users' });
   }
@@ -38,10 +38,10 @@ export const updateUser = async (req, res) => {
     const { id } = req.query;
     const data = req.body;
     delete data._id
-    delete data._v //???
+    delete data.__v
 
     if (id) {
-      const User = await User.findByIdAndUpdate(id, data, {
+      const user = await User.findByIdAndUpdate(id, data, {
         new: true,
         runValidators: true,
         context: 'query'
@@ -65,7 +65,7 @@ export const deleteUser = async (req, res) => {
   const { id } = req.query;
 
   try {
-    const user = await User.findByIdAndRemove(id);
+    const user = await User.findByIdAndDelete(id);
 
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
