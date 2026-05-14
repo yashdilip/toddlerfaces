@@ -12,7 +12,6 @@ const fetchAlbums = async () => {
 
 const onCreateAlbum = async (album) => {
   try {
-    console.log({album})
     const response = await axios.post('/api/albums', album);
     return response.data;
   } catch (error) {

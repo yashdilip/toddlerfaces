@@ -5,6 +5,23 @@ const albumSchema = new Schema({
     type: String,
     required: true
   },
+  owner: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  sharedWith: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
+  images: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Image",
+    },
+  ],
   createdBy: {
     type: String,
     required: true,

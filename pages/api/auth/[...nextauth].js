@@ -1,11 +1,10 @@
 import NextAuth from "next-auth"
 import GithubProvider from "next-auth/providers/github"
-
+import bcrypt from "bcrypt";
+import { MongoDBAdapter } from "@next-auth/mongodb-adapter"
 import CredentialsProvider from "next-auth/providers/credentials"
 import clientPromise from "../../../lib/mongodb";
-import { MongoDBAdapter } from "@next-auth/mongodb-adapter"
 import { dbConnect } from "../../../lib/db-connect";
-import bcrypt from "bcrypt";
 import User from "../../../models/user";
 
 const validateAllOnce = (fields) => {

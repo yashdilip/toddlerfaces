@@ -2,7 +2,6 @@ import Album from '../../../models/album'
 
 export const createAlbum = async (req, res) => {
   const newAlbum = new Album({...req.body});
-  console.log({newAlbum})
   try {
     const album = await newAlbum.save();;
     res.status(201).json({album, message: 'Successfully created album'});
@@ -29,6 +28,21 @@ export const getAlbumById = async (req, res) => {
     res.status(200).json(album);
   } catch (err) {
     res.status(400).json({ message: 'Failed to retrieve Album' });
+  }
+};
+
+export const getAlbumsByUserId = async (req, res) => {
+  try {
+    const { userId } = req.query
+    const albums = await Album.find({
+      owner: userId
+    });
+    if (!albums) {
+      return res.status(404).json({ message: 'Albums not found' });
+    }
+    res.status(200).json(albums);
+  } catch (err) {
+    res.status(400).json({ message: 'Failed to retrieve Albums' });
   }
 };
 
@@ -75,3 +89,21 @@ export const deleteAlbum = async (req, res) => {
     res.status(400).json({ message: 'Failed to delete Album' });
   }
 };
+
+export const shareAlbumByAlbumIdUserId = async (req, res) => {
+  try {
+    const { albumId, userId } = req.query
+    const album = await Album.findById(albumId)
+
+    if (!album) {
+      return res.status(404).json({ message: 'Album not found' })
+    }
+
+    album.sharedWith.push(userId)
+
+    await album.save()
+    res.status(200).json({ message: 'Successfully shared the album' })
+  } catch (error) {
+    res.status(500).json ({ message: 'Failed to share the album', err: error })
+  }
+}

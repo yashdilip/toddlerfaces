@@ -1,6 +1,7 @@
 import { AiOutlineClose } from "react-icons/ai";
 import { BiEdit } from "react-icons/bi";
 import React, { useState } from 'react';
+import Link from 'next/link';
 
 const AlbumTile = ({ album, selectedAlbum, setSelectedAlbum, onUpdateAlbum, onDeleteAlbum, children }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -27,9 +28,7 @@ const AlbumTile = ({ album, selectedAlbum, setSelectedAlbum, onUpdateAlbum, onDe
 
   // working
   const handleDelete = (id) => {
-    console.log("deleting album with id " + id)
     const data = onDeleteAlbum(id);
-console.log({data})
   };
 
   return (
@@ -61,13 +60,20 @@ console.log({data})
             </button>
           </div>
 
-          <h3 className="text-lg font-bold">{editedAlbum.title}</h3>
-          <p className="text-gray-700 text-base">
-            Created by: {editedAlbum.createdBy} at {editedAlbum.createdAt} 
-          </p>
-          <p className="text-gray-700 text-base">
-            Id: {editedAlbum._id}
-          </p>
+          <Link 
+            href={`/album?albumId=${album._id}`}
+            legacyBehavior
+          >
+            <a>
+            <h3 className="text-lg font-bold">{editedAlbum.title}</h3>
+            <p className="text-gray-700 text-base">
+              Created by: {editedAlbum.createdBy} at {editedAlbum.createdAt} 
+            </p>
+            <p className="text-gray-700 text-base">
+              Id: {editedAlbum._id}
+            </p>
+            </a>
+          </Link>
         </div>
       )}
     </div>

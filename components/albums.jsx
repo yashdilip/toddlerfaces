@@ -3,7 +3,7 @@ import AlbumTiles from './album/albumTiles'
 
 const Albums = () => {
   return (
-    <div className="flex flex-wrap justify-center">
+    <div>
       <AlbumTiles />
     </div>
   )

@@ -8,8 +8,6 @@ import { HiOutlineMail } from "react-icons/hi";
 import Link from 'next/link'
 import { useSession, signIn } from 'next-auth/react'
 
-
-
 const SignUp = (props) => {
   const [success, setSuccess] = useState(false);
   const [errors, setErrors] = useState({});
@@ -181,97 +179,7 @@ const SignUp = (props) => {
         <Link href="#" legacyBehavior>
           <a className='text-blue-700 hover:underline dark:text-blue-500' onClick={() => props.toggleForm()}>Sign In</a>
         </Link>
-      </div>
-
-      {/* <div className="mb-4">
-        <label className="block text-gray-700 font-medium mb-2" htmlFor="username">Username</label>
-        <input
-          id="username"
-          name="username"
-          type="text"
-          placeholder="John Doe"
-          className={`${formik.errors.username ? 'border-red-500':''} rounded-none rounded-r-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`}
-          className={`w-full border border-gray-400 p-2 rounded-lg ${formik.errors.username ? 'border-red-500':''}`}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.username}
-        />
-        <span className='icon flex items-center px-4'>
-          <HiUser size={25} />
-        </span>
-        {formik.touched.username && formik.errors.username ? (
-          <div className="text-red-500">{formik.errors.username}</div>
-        ) : null}        
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700 font-medium mb-2" htmlFor="email">Email</label>
-        <input
-          id="email"
-          name="email"
-          type="text"
-          placeholder="example@email.com"
-          className={`w-full border border-gray-400 p-2 rounded-lg ${formik.errors.email ? 'border-red-500':''}`}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.email}
-        />
-        <span className='icon flex items-center px-4'>
-          <HiAtSymbol size={25} />
-        </span>
-        {formik.touched.email && formik.errors.email ? (
-          <div className="text-red-500">{formik.errors.email}</div>
-        ) : null}        
-      </div>
-      <div className="mb-4">
-        <label className="block text-gray-700 font-medium mb-2" htmlFor="password">Password</label>
-        <input
-          id="password"
-          name="password"
-          type={`${show.password ? "text" : "password"}`}
-          placeholder="********"
-          className={`w-full border border-gray-400 p-2 rounded-lg ${formik.errors.password ? 'border-red-500':''}`}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.password}
-        />
-        <span className='icon flex items-center px-4' onClick={() => setShow({ ...show, password: !show.password})}>
-          {show.password ? <HiEye size={25} /> : <HiEyeSlash size={25} />}
-        </span>
-        {formik.touched.password && formik.errors.password ? (
-          <div className="text-red-500">{formik.errors.password}</div>
-        ) : null}        
-      </div> 
-      <div className="mb-4">
-        <label className="block text-gray-700 font-medium mb-2" htmlFor="cpassword">Confirm Password</label>
-        <input
-          id="cpassword"
-          name="cpassword"
-          type={`${show.password ? "text" : "password"}`}
-          placeholder="********"
-          className={`w-full border border-gray-400 p-2 rounded-lg ${formik.errors.cpassword ? 'border-red-500':''}`}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          value={formik.values.cpassword}
-        />
-        <span className='icon flex items-center px-4' onClick={() => setShow({ ...show, cpassword: !show.cpassword})}>
-          {show.cpassword ? <HiEye size={25} /> : <HiEyeSlash size={25} />}
-        </span>
-        {formik.touched.cpassword && formik.errors.cpassword ? (
-          <div className="text-red-500">{formik.errors.cpassword}</div>
-        ) : null}        
-      </div> 
-      
-      <button className="bg-indigo-500 text-white py-2 px-4 rounded-lg hover:bg-indigo-600" type="submit">
-        Sign Up
-      </button>
-      <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
-        Have an account? 
-        <Link href="#" legacyBehavior>
-          <a className='text-blue-700 hover:underline dark:text-blue-500' onClick={() => props.toggleForm()}>Sign In</a>
-        </Link>
-      </div>
-      */}
-      
+      </div>      
     </form>
   )
 }

@@ -10,7 +10,7 @@ export default function Home () {
   useEffect(() => {
     if (!session) return;
 
-    axios.get('/api/user', { headers: { 'Authorization': `Bearer ${session.token}` } })
+    axios.get('/api/users', { headers: { 'Authorization': `Bearer ${session.token}` } })
       .then(res => setUsers(res.data))
       .catch(err => console.log(err));
   }, [session]);

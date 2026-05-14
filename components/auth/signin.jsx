@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
 import Router, { useRouter } from 'next/router'
-import axios from 'axios';
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { HiUser, HiEye, HiEyeSlash } from "react-icons/hi2"
 import { HiOutlineMail } from "react-icons/hi";
 import Link from 'next/link'
-
 import { useSession, signIn } from 'next-auth/react'
 import { BsGithub } from 'react-icons/bs'
 
