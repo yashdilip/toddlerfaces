@@ -18,7 +18,7 @@ const DarkMode = () => {
 
   return (
     <button
-      className="inline-flex h-10 w-10 items-center justify-center rounded-md border border-gray-200 text-gray-700 transition hover:bg-gray-100 dark:border-gray-800 dark:text-gray-200 dark:hover:bg-gray-900"
+      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 transition hover:bg-gray-100 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-200 dark:hover:bg-gray-800"
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       type="button"

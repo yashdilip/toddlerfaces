@@ -3,7 +3,10 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
-const cardClass = "rounded-lg border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-800 dark:bg-gray-950";
+const cardClass = "rounded-lg border border-gray-200 bg-white/90 p-5 shadow-sm backdrop-blur dark:border-gray-800 dark:bg-gray-950/90";
+const fieldClass = "h-11 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 shadow-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 dark:border-gray-700 dark:bg-gray-950 dark:text-white";
+const textareaClass = "w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 shadow-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 dark:border-gray-700 dark:bg-gray-950 dark:text-white";
+const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-200";
 
 export default function RoleDashboard() {
   const { data: session, status } = useSession();
@@ -76,7 +79,7 @@ export default function RoleDashboard() {
   }
 
   if (status === "loading") {
-    return <div className={cardClass}>Loading dashboard...</div>
+    return <div className={cardClass}>Preparing your dashboard...</div>
   }
 
   if (!session?.user) {
@@ -84,7 +87,7 @@ export default function RoleDashboard() {
       <div className={cardClass}>
         <h1 className="text-2xl font-bold text-gray-950 dark:text-white">Sign in required</h1>
         <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">Role dashboards are available after login.</p>
-        <Link href="/auth-page" className="mt-5 inline-flex rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white">
+        <Link href="/auth-page" className="mt-5 inline-flex rounded-full bg-indigo-600 px-4 py-2.5 text-sm font-bold text-white dark:bg-indigo-500 dark:text-white">
           Sign in
         </Link>
       </div>
@@ -93,10 +96,10 @@ export default function RoleDashboard() {
 
   return (
     <div className="space-y-6">
-      <section className="relative overflow-hidden rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-950">
+      <section className="relative overflow-hidden rounded-lg border border-gray-200 bg-white/90 p-6 shadow-sm backdrop-blur dark:border-gray-800 dark:bg-gray-950/90">
         <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-rose-400 via-amber-300 to-sky-400" />
         <p className="text-sm font-semibold uppercase tracking-wide text-indigo-600 dark:text-indigo-400">{role} dashboard</p>
-        <h1 className="mt-2 text-3xl font-bold text-gray-950 dark:text-white">Welcome, {session.user.username || session.user.email}</h1>
+        <h1 className="mt-2 text-3xl font-black tracking-tight text-gray-950 dark:text-white">Welcome, {session.user.username || session.user.email}</h1>
         <p className="mt-3 max-w-3xl text-sm leading-6 text-gray-600 dark:text-gray-300">
           Manage child profiles, memory albums, sharing approvals, and the audit trail from one role-aware workspace.
         </p>
@@ -106,7 +109,7 @@ export default function RoleDashboard() {
         <div className={cardClass}>
           <h2 className="text-lg font-semibold text-gray-950 dark:text-white">Albums</h2>
           <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-300">Create, open, invite, attach external media, and request public approval.</p>
-          <Link href="/" className="mt-5 inline-flex rounded-md bg-gray-900 px-4 py-2 text-sm font-semibold text-white dark:bg-white dark:text-gray-950">
+          <Link href="/#albums" className="mt-5 inline-flex rounded-full bg-indigo-600 px-4 py-2.5 text-sm font-bold text-white dark:bg-indigo-500 dark:text-white">
             Open albums
           </Link>
         </div>
@@ -121,7 +124,7 @@ export default function RoleDashboard() {
 
         <div className={cardClass}>
           <h2 className="text-lg font-semibold text-gray-950 dark:text-white">Moderation</h2>
-          <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-300">Automated provider is a future TODO. Admin manual review gates public sharing today.</p>
+          <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-300">Public sharing remains gated by review so sensitive albums are never published casually.</p>
         </div>
       </div>
 
@@ -134,23 +137,32 @@ export default function RoleDashboard() {
                 {children.length ? children.map((child) => (
                   <div className="rounded-md border border-gray-200 bg-gray-50 p-4 dark:border-gray-800 dark:bg-gray-900" key={child._id}>
                     <p className="font-semibold text-gray-950 dark:text-white">{child.name}</p>
-                    <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">{child.birthMonth || "--"}/{child.birthYear || "----"}</p>
+                    <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">{child.birthMonth && child.birthYear ? `${child.birthMonth}/${child.birthYear}` : "Birth details not added"}</p>
                     {child.notes && <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">{child.notes}</p>}
                   </div>
                 )) : (
-                  <p className="rounded-md border border-dashed border-gray-300 p-4 text-sm text-gray-600 dark:border-gray-700 dark:text-gray-300">No child profiles yet.</p>
+                  <p className="rounded-md border border-dashed border-gray-300 p-4 text-sm text-gray-600 dark:border-gray-700 dark:text-gray-300">No child profiles yet. Add one to connect albums to a child profile.</p>
                 )}
               </div>
             </div>
-            <form onSubmit={createChild} className="rounded-md bg-gray-50 p-4 dark:bg-gray-900">
+            <form onSubmit={createChild} className="rounded-md border border-gray-200 bg-gray-50 p-4 dark:border-gray-800 dark:bg-gray-900">
               <h3 className="font-semibold text-gray-950 dark:text-white">Add child profile</h3>
-              <input className="mt-3 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-950 dark:text-white" placeholder="Child name" value={childForm.name} onChange={(event) => setChildForm({ ...childForm, name: event.target.value })} />
-              <div className="mt-3 grid grid-cols-2 gap-3">
-                <input className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-950 dark:text-white" placeholder="Birth month" value={childForm.birthMonth} onChange={(event) => setChildForm({ ...childForm, birthMonth: event.target.value })} />
-                <input className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-950 dark:text-white" placeholder="Birth year" value={childForm.birthYear} onChange={(event) => setChildForm({ ...childForm, birthYear: event.target.value })} />
-              </div>
-              <textarea className="mt-3 min-h-20 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-950 dark:text-white" placeholder="Notes" value={childForm.notes} onChange={(event) => setChildForm({ ...childForm, notes: event.target.value })} />
-              <button className="mt-3 rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white" type="submit">Create profile</button>
+              <label className={`${labelClass} mt-4`}>
+                Child name
+                <input className={`mt-1 ${fieldClass}`} placeholder="Child name" value={childForm.name} onChange={(event) => setChildForm({ ...childForm, name: event.target.value })} />
+              </label>
+              <fieldset className="mt-4">
+                <legend className={labelClass}>Birth date</legend>
+                <div className="mt-1 grid gap-3 sm:grid-cols-2">
+                  <input className={fieldClass} placeholder="Month" value={childForm.birthMonth} onChange={(event) => setChildForm({ ...childForm, birthMonth: event.target.value })} />
+                  <input className={fieldClass} placeholder="Year" value={childForm.birthYear} onChange={(event) => setChildForm({ ...childForm, birthYear: event.target.value })} />
+                </div>
+              </fieldset>
+              <label className={`${labelClass} mt-4`}>
+                Notes
+                <textarea className={`mt-1 min-h-20 ${textareaClass}`} placeholder="Private notes for this profile" value={childForm.notes} onChange={(event) => setChildForm({ ...childForm, notes: event.target.value })} />
+              </label>
+              <button className="mt-4 w-full rounded-full bg-indigo-600 px-4 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-indigo-700 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400" type="submit">Create profile</button>
             </form>
           </div>
         </section>
@@ -161,12 +173,12 @@ export default function RoleDashboard() {
           <h2 className="text-xl font-semibold text-gray-950 dark:text-white">Public approval requests</h2>
           <div className="mt-4 grid gap-3">
             {approvals.length ? approvals.map((approval) => (
-              <div className="rounded-md border border-gray-200 p-4 text-sm dark:border-gray-800" key={approval._id}>
+              <div className="rounded-md border border-gray-200 bg-gray-50/80 p-4 text-sm dark:border-gray-800 dark:bg-gray-900/80" key={approval._id}>
                 <p className="font-semibold capitalize text-gray-950 dark:text-white">{approval.status}</p>
                 <p className="mt-1 text-gray-600 dark:text-gray-300">Parent consent: {approval.parentConsentEmail}</p>
                 <p className="mt-1 text-gray-500 dark:text-gray-400">Expires: {new Date(approval.expiresAt).toLocaleString()}</p>
               </div>
-            )) : <p className="text-sm text-gray-600 dark:text-gray-300">No approval requests yet.</p>}
+            )) : <p className="rounded-md border border-dashed border-gray-300 p-4 text-sm text-gray-600 dark:border-gray-700 dark:text-gray-300">No approval requests yet.</p>}
           </div>
         </section>
       )}
@@ -177,7 +189,7 @@ export default function RoleDashboard() {
           <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-300">
             Deliver queued verification, invite, and public consent emails through Resend, SendGrid, or console mode.
           </p>
-          <button className="mt-4 rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white" type="button" onClick={processEmailOutbox}>
+          <button className="mt-4 rounded-full bg-indigo-600 px-4 py-2.5 text-sm font-bold text-white dark:bg-indigo-500 dark:text-white" type="button" onClick={processEmailOutbox}>
             Process queued emails
           </button>
           {emailProcessResults.length > 0 && (
@@ -196,21 +208,21 @@ export default function RoleDashboard() {
         <section className={cardClass}>
           <h2 className="text-xl font-semibold text-gray-950 dark:text-white">Moderation queue</h2>
           <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-300">
-            Placeholder provider mode: review pending media manually. Public approval cannot complete until images are approved.
+            Review pending media before any album becomes public. Public approval cannot complete until images are cleared.
           </p>
           <div className="mt-4 grid gap-3">
             {moderationQueue.length ? moderationQueue.map((image) => (
-              <div className="rounded-md border border-gray-200 p-4 text-sm dark:border-gray-800" key={image._id}>
-                <p className="font-semibold text-gray-950 dark:text-white">{image.caption || "Untitled image"}</p>
+              <div className="rounded-md border border-gray-200 bg-gray-50/80 p-4 text-sm dark:border-gray-800 dark:bg-gray-900/80" key={image._id}>
+                <p className="font-semibold text-gray-950 dark:text-white">{image.caption || "Album image"}</p>
                 <p className="mt-1 break-all text-xs text-gray-500 dark:text-gray-400">{image.sourceUrl}</p>
                 <p className="mt-2 capitalize text-gray-600 dark:text-gray-300">{image.moderationStatus?.replaceAll("_", " ")}</p>
                 <div className="mt-3 flex flex-wrap gap-2">
-                  <button className="rounded-md bg-emerald-600 px-3 py-2 text-xs font-semibold text-white" type="button" onClick={() => reviewImage(image._id, "approved")}>Approve</button>
-                  <button className="rounded-md bg-amber-600 px-3 py-2 text-xs font-semibold text-white" type="button" onClick={() => reviewImage(image._id, "needs_review")}>Needs review</button>
-                  <button className="rounded-md bg-red-600 px-3 py-2 text-xs font-semibold text-white" type="button" onClick={() => reviewImage(image._id, "blocked")}>Block</button>
+                  <button className="rounded-full bg-emerald-600 px-3 py-2 text-xs font-bold text-white" type="button" onClick={() => reviewImage(image._id, "approved")}>Approve</button>
+                  <button className="rounded-full bg-amber-600 px-3 py-2 text-xs font-bold text-white" type="button" onClick={() => reviewImage(image._id, "needs_review")}>Needs review</button>
+                  <button className="rounded-full bg-red-600 px-3 py-2 text-xs font-bold text-white" type="button" onClick={() => reviewImage(image._id, "blocked")}>Block</button>
                 </div>
               </div>
-            )) : <p className="text-sm text-gray-600 dark:text-gray-300">No pending moderation items.</p>}
+            )) : <p className="rounded-md border border-dashed border-gray-300 p-4 text-sm text-gray-600 dark:border-gray-700 dark:text-gray-300">No pending moderation items.</p>}
           </div>
         </section>
       )}

@@ -16,7 +16,7 @@ export default async function handler(request, response) {
   if (request.method === "POST") {
 
     if (!request.body) {
-      return response.status(404).json({message: "Don't have form data...!"})
+      return response.status(400).json({ message: "Please complete the signup form." })
     }
 
     const { username, email, password, role, birthMonth, birthYear, legalAccepted } = request.body;
@@ -48,7 +48,7 @@ export default async function handler(request, response) {
     const checkExiting = await User.findOne({ email })
 
     if (checkExiting) {
-      return response.status(422).json({ message: "User already exists...!" })
+      return response.status(422).json({ message: "An account already exists for this email address." })
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -90,7 +90,7 @@ export default async function handler(request, response) {
       },
     });
 
-    return response.status(201).json({ message: "User created successfully...!"})
+    return response.status(201).json({ message: "Your account is ready." })
 
   }
 };

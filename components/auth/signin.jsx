@@ -1,16 +1,20 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import { useFormik } from "formik"
 import * as Yup from "yup"
 import { useSession, signIn } from 'next-auth/react'
 
-const fieldClass = "mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 shadow-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
+const fieldClass = "mt-1 h-11 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 shadow-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
 const labelClass = "text-sm font-medium text-gray-700 dark:text-gray-200"
 
 const SignIn = (props) => {
   const { data: session, status } = useSession()
   const [serverError, setServerError] = useState('')
   const { push } = useRouter()
+
+  useEffect(() => {
+    if (session) push("/dashboard")
+  }, [push, session])
 
   const formik = useFormik({
     initialValues: {
@@ -24,7 +28,7 @@ const SignIn = (props) => {
         redirect: false,
       })
 
-      response?.error ? setServerError("Email or password is incorrect.") : push("/home")
+      response?.error ? setServerError("Email or password is incorrect.") : push("/dashboard")
     },
     validationSchema: Yup.object({
       email: Yup.string().email('Invalid email address').required('Email is required'),
@@ -32,16 +36,15 @@ const SignIn = (props) => {
     }),
   })
 
-  if (status === 'loading') return <p className="text-sm text-gray-600 dark:text-gray-300">Checking authentication...</p>
-  if (session) push("/home")
+  if (status === 'loading') return <p className="text-sm text-gray-600 dark:text-gray-300">Preparing your secure session...</p>
 
   return (
-    <form onSubmit={formik.handleSubmit} className="w-full rounded-lg border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-950">
+    <form onSubmit={formik.handleSubmit} className="w-full rounded-lg border border-gray-200 bg-white/90 p-6 shadow-xl shadow-gray-900/5 backdrop-blur dark:border-gray-800 dark:bg-gray-950/90">
       <div className="mb-6">
         <p className="text-sm font-semibold uppercase tracking-wide text-indigo-600 dark:text-indigo-400">Welcome back</p>
         <h1 className="mt-1 text-2xl font-bold text-gray-950 dark:text-white">Sign in to Toddlerfaces</h1>
         <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
-          Parents, photographers, and database-promoted admins can sign in here.
+          Continue to your albums, invitations, approvals, and gallery workspace.
         </p>
       </div>
 
@@ -65,7 +68,7 @@ const SignIn = (props) => {
         </div>
       </div>
 
-      <button className="mt-6 w-full rounded-md bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-500/30" type="submit">
+      <button className="mt-6 w-full rounded-full bg-indigo-600 px-4 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-gray-500/20 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400" type="submit">
         Sign in
       </button>
 

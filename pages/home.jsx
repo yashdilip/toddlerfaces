@@ -1,9 +1,12 @@
-import RoleDashboard from '../components/dashboard/RoleDashboard'
+export async function getServerSideProps() {
+  return {
+    redirect: {
+      destination: "/dashboard",
+      permanent: false,
+    },
+  }
+}
 
-export default function Home () {
-  return (
-    <div className="mx-auto max-w-7xl px-4 py-12">
-      <RoleDashboard />
-    </div>
-  )
-};
+export default function HomeRedirect() {
+  return null
+}

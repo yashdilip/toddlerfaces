@@ -2,15 +2,34 @@ a {
   text-decoration: none;
   color: inherit;
 }
-header {
-  position: sticky;
-  z-index: 30;
-  top: 0;
-}
 
 .center {
   min-height: 600px;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+::selection {
+  background: rgba(99, 102, 241, 0.22);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
 }

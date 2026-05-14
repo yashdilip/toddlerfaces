@@ -8,7 +8,7 @@ export default function DataCollection() {
       sections={[
         { heading: "Data categories", items: ["Account data", "Child metadata", "Album metadata", "Media provider references", "Legal and audit records", "Moderation results", "Authentication/session data", "Support and safety reports"] },
         { heading: "Why data is collected", items: ["Account authentication and adult eligibility", "Album organization and gallery rendering", "Public/private visibility enforcement", "Upload attestation and legal audit trail", "Public publishing approval", "Content moderation and child safety enforcement"] },
-        { heading: "Storage transparency", body: "MongoDB is the metadata source of truth. Original media should remain in external storage providers selected by parents or photographers." },
+        { heading: "Storage transparency", body: "Toddlerfaces keeps album records, permissions, and image references. Original media remains in external storage providers selected by parents or photographers." },
       ]}
     />
   )

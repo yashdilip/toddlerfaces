@@ -22,8 +22,12 @@ const occasionOptions = [
   ["custom", "Custom"],
 ]
 
+const fieldClass = "mt-1 h-11 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 shadow-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+const textareaClass = "mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 shadow-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-200"
+
 const EmptyAlbumPlaceholder = ({ canCreate }) => (
-  <div className="relative overflow-hidden rounded-lg border border-dashed border-gray-300 bg-white p-8 text-center shadow-sm dark:border-gray-700 dark:bg-gray-950">
+  <div className="relative overflow-hidden rounded-lg border border-dashed border-gray-300 bg-white/90 p-8 text-center shadow-sm backdrop-blur dark:border-gray-700 dark:bg-gray-950/90">
     <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-rose-400 via-amber-300 to-sky-400" />
     <div className="mx-auto grid h-40 max-w-md grid-cols-4 gap-3">
       {[0, 1, 2, 3, 4, 5, 6, 7].map((item) => (
@@ -35,7 +39,7 @@ const EmptyAlbumPlaceholder = ({ canCreate }) => (
       Start with a birthday, milestone, family collection, or photographer delivery. Toddlerfaces keeps metadata here and points to media in your chosen storage.
     </p>
     {!canCreate && (
-      <p className="mx-auto mt-4 max-w-lg rounded-md bg-amber-50 p-3 text-sm text-amber-800 dark:bg-amber-950 dark:text-amber-100">
+        <p className="mx-auto mt-4 max-w-lg rounded-md bg-amber-50 p-3 text-sm text-amber-800 dark:bg-amber-950 dark:text-amber-100">
         Sign in as a parent or photographer to create a memory album.
       </p>
     )}
@@ -62,7 +66,7 @@ const AlbumTiles = () => {
 
   const roleCopy = useMemo(() => {
     if (session?.user?.role === "photographer") return "Create a delivery album, attach the client-approved source, and keep the set private until the parent approves sharing.";
-    if (session?.user?.role === "admin") return "Admin accounts can inspect and manage albums after you promote a user directly in MongoDB.";
+    if (session?.user?.role === "admin") return "Admin accounts can review albums, safety states, and operational records after being granted access by the owner.";
     return "Create albums for birthdays, milestones, and the little everyday scenes you want to keep easy to revisit.";
   }, [session?.user?.role]);
 
@@ -91,7 +95,7 @@ const AlbumTiles = () => {
     const result = await onCreateAlbum({
       ...newAlbum,
       createdAt: new Date().toISOString(),
-      createdBy: session?.user?.username || session?.user?.email || "Current user",
+      createdBy: session?.user?.username || session?.user?.email || "Toddlerfaces member",
       children: newAlbum.childId ? [newAlbum.childId] : [],
     });
 
@@ -114,7 +118,7 @@ const AlbumTiles = () => {
       return;
     }
 
-    setServerMessage(result?.response?.data?.message || "Could not create album. Check your sign-in and MongoDB connection.");
+    setServerMessage(result?.response?.data?.message || "We could not create the album right now. Please sign in and try again.");
   };
 
   const handleDeleteAlbum = async (id) => {
@@ -136,83 +140,89 @@ const AlbumTiles = () => {
         </div>
       )}
 
-      <form onSubmit={handleCreateAlbum} className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950">
-        <div className="border-b border-gray-200 bg-gray-50 p-5 dark:border-gray-800 dark:bg-gray-900">
+      <form onSubmit={handleCreateAlbum} className="overflow-hidden rounded-lg border border-gray-200 bg-white/90 shadow-sm backdrop-blur dark:border-gray-800 dark:bg-gray-950/90">
+        <div className="border-b border-gray-200 bg-gray-50/80 p-5 dark:border-gray-800 dark:bg-gray-900/80">
           <p className="text-sm font-semibold uppercase tracking-wide text-indigo-600 dark:text-indigo-400">Create a memory album</p>
           <h3 className="mt-1 text-2xl font-bold text-gray-950 dark:text-white">Album, privacy, and source</h3>
           <p className="mt-2 max-w-3xl text-sm leading-6 text-gray-600 dark:text-gray-300">{roleCopy}</p>
         </div>
 
-        <fieldset disabled={!canCreate} className="grid gap-4 p-5 md:grid-cols-2">
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-200">
-            Album title
-            <input className="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white" value={newAlbum.title} onChange={(event) => setNewAlbum({ ...newAlbum, title: event.target.value })} placeholder="Maya turns three" />
-          </label>
+        <fieldset disabled={!canCreate} className="space-y-5 p-5">
+          <div className="grid gap-4 md:grid-cols-2">
+            <label className={labelClass}>
+              Album title
+              <input className={fieldClass} value={newAlbum.title} onChange={(event) => setNewAlbum({ ...newAlbum, title: event.target.value })} placeholder="Third birthday morning" />
+            </label>
 
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-200">
-            Child or album subject
-            <input className="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white" value={newAlbum.childName} onChange={(event) => setNewAlbum({ ...newAlbum, childName: event.target.value })} placeholder="Maya" />
-          </label>
+            <label className={labelClass}>
+              Child or album subject
+              <input className={fieldClass} value={newAlbum.childName} onChange={(event) => setNewAlbum({ ...newAlbum, childName: event.target.value })} placeholder="Child or family name" />
+            </label>
+          </div>
 
           {children.length > 0 && (
-            <label className="text-sm font-medium text-gray-700 dark:text-gray-200">
+            <label className={labelClass}>
               Link child profile
-              <select className="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white" value={newAlbum.childId} onChange={(event) => setNewAlbum({ ...newAlbum, childId: event.target.value, childName: children.find((child) => child._id === event.target.value)?.name || newAlbum.childName })}>
+              <select className={fieldClass} value={newAlbum.childId} onChange={(event) => setNewAlbum({ ...newAlbum, childId: event.target.value, childName: children.find((child) => child._id === event.target.value)?.name || newAlbum.childName })}>
                 <option value="">No linked profile</option>
                 {children.map((child) => <option value={child._id} key={child._id}>{child.name}</option>)}
               </select>
             </label>
           )}
 
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-200">
-            Occasion
-            <select className="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white" value={newAlbum.occasion} onChange={(event) => setNewAlbum({ ...newAlbum, occasion: event.target.value })}>
-              {occasionOptions.map(([value, label]) => <option value={value} key={value}>{label}</option>)}
-            </select>
-          </label>
+          <div className="grid gap-4 md:grid-cols-2">
+            <label className={labelClass}>
+              Occasion
+              <select className={fieldClass} value={newAlbum.occasion} onChange={(event) => setNewAlbum({ ...newAlbum, occasion: event.target.value })}>
+                {occasionOptions.map(([value, label]) => <option value={value} key={value}>{label}</option>)}
+              </select>
+            </label>
 
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-200">
-            Storage source
-            <select className="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white" value={newAlbum.mediaProvider} onChange={(event) => setNewAlbum({ ...newAlbum, mediaProvider: event.target.value })}>
-              {providerOptions.map(([value, label]) => <option value={value} key={value}>{label}</option>)}
-            </select>
-          </label>
+            <label className={labelClass}>
+              Storage source
+              <select className={fieldClass} value={newAlbum.mediaProvider} onChange={(event) => setNewAlbum({ ...newAlbum, mediaProvider: event.target.value })}>
+                {providerOptions.map(([value, label]) => <option value={value} key={value}>{label}</option>)}
+              </select>
+            </label>
+          </div>
 
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-200 md:col-span-2">
+          <label className={labelClass}>
             Source folder, gallery, or share link
-            <input className="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white" value={newAlbum.mediaSourceUrl} onChange={(event) => setNewAlbum({ ...newAlbum, mediaSourceUrl: event.target.value })} placeholder="https://drive.google.com/drive/folders/..." />
+            <input className={fieldClass} value={newAlbum.mediaSourceUrl} onChange={(event) => setNewAlbum({ ...newAlbum, mediaSourceUrl: event.target.value })} placeholder="Paste a Drive folder, gallery, or storage link" />
           </label>
 
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-200">
-            Visibility request
-            <select className="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white" value={newAlbum.visibility} onChange={(event) => setNewAlbum({ ...newAlbum, visibility: event.target.value })}>
-              <option value="private">Private</option>
-              <option value="shared">Shared by invite</option>
-              <option value="public">Request public approval</option>
-            </select>
-          </label>
+          <div className="grid gap-4 md:grid-cols-2">
+            <label className={labelClass}>
+              Visibility request
+              <select className={fieldClass} value={newAlbum.visibility} onChange={(event) => setNewAlbum({ ...newAlbum, visibility: event.target.value })}>
+                <option value="private">Private</option>
+                <option value="shared">Shared by invite</option>
+                <option value="public">Request public approval</option>
+              </select>
+            </label>
 
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-200">
-            Memory mood
-            <select className="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white" value={newAlbum.mood} onChange={(event) => setNewAlbum({ ...newAlbum, mood: event.target.value })}>
-              <option value="warm">Warm birthday light</option>
-              <option value="gentle">Soft family morning</option>
-              <option value="studio">Clean studio delivery</option>
-              <option value="bright">Bright celebration</option>
-            </select>
-          </label>
+            <label className={labelClass}>
+              Memory mood
+              <select className={fieldClass} value={newAlbum.mood} onChange={(event) => setNewAlbum({ ...newAlbum, mood: event.target.value })}>
+                <option value="warm">Warm birthday light</option>
+                <option value="gentle">Soft family morning</option>
+                <option value="studio">Clean studio delivery</option>
+                <option value="bright">Bright celebration</option>
+              </select>
+            </label>
+          </div>
 
-          <label className="text-sm font-medium text-gray-700 dark:text-gray-200 md:col-span-2">
+          <label className={labelClass}>
             Memory note
-            <textarea className="mt-1 min-h-24 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white" value={newAlbum.description} onChange={(event) => setNewAlbum({ ...newAlbum, description: event.target.value })} placeholder="A short note about the day, the people, or the feeling this album should preserve." />
+            <textarea className={`${textareaClass} min-h-24`} value={newAlbum.description} onChange={(event) => setNewAlbum({ ...newAlbum, description: event.target.value })} placeholder="A short note about the day, the people, or the feeling this album should preserve." />
           </label>
         </fieldset>
 
         <div className="flex flex-col gap-3 border-t border-gray-200 p-5 dark:border-gray-800 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs leading-5 text-gray-500 dark:text-gray-400">
-            Public requests remain private until moderation and account-holder email approval are complete.
+            Public requests remain private until moderation and account-holder email approval are complete. External media stays with the selected provider.
           </p>
-          <button disabled={!canCreate} className="rounded-md bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-gray-400" type="submit">
+          <button disabled={!canCreate} className="rounded-full bg-indigo-600 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-gray-400 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400" type="submit">
             Create album
           </button>
         </div>

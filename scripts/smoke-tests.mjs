@@ -13,7 +13,7 @@ assert(album.includes("children"), "Album model must link child profiles.");
 
 const image = read("models/Image.js");
 assert(image.includes("uploadAttestation"), "Image model must track upload attestation.");
-assert(image.includes("moderationStatus"), "Image model must keep moderation placeholder status.");
+assert(image.includes("moderationStatus"), "Image model must keep media review status.");
 
 const publicApprovals = read("pages/api/public-approvals/index.js");
 assert(publicApprovals.includes("parentConsentEmail"), "Public approval API must require parent consent email.");
@@ -23,7 +23,7 @@ const publicApprovalApprove = read("pages/api/public-approvals/approve.js");
 assert(publicApprovalApprove.includes("moderationStatus"), "Public approval must check moderation status before publishing.");
 
 const upload = read("pages/api/images/upload.js");
-assert(upload.includes("Local binary uploads are disabled"), "Local binary uploads must stay disabled by default.");
+assert(upload.includes("Direct file uploads are not available"), "Local binary uploads must stay disabled by default.");
 
 const emailOutbox = read("lib/email-outbox.js");
 assert(emailOutbox.includes("processQueuedEmails"), "Email outbox must expose a delivery processor.");

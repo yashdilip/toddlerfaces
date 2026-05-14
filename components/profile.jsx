@@ -3,12 +3,12 @@ import Image from 'next/image';
 
 const UserProfile = ({ user }) => {
   return (
-    <div className="bg-white rounded-lg shadow-md p-4" key={user._id}>
-      <Image src={user.avatar} alt={user.name} className="w-32 h-32 rounded-full mx-auto mb-4" />
-      <h2 className="text-lg font-medium text-center mb-2">{user.name}</h2>
-      <p className="text-gray-600 text-center">{user.email}</p>
-      <div className="text-center mt-4">
-        <button className="bg-blue-500 text-white p-2 rounded-lg">Edit Profile</button>
+    <div className="rounded-lg border border-gray-200 bg-white/90 p-4 shadow-sm backdrop-blur dark:border-gray-800 dark:bg-gray-950/90" key={user._id}>
+      <Image src={user.avatar} alt={user.name} className="mx-auto mb-4 h-32 w-32 rounded-full" />
+      <h2 className="mb-2 text-center text-lg font-semibold text-gray-950 dark:text-white">{user.name}</h2>
+      <p className="text-center text-gray-600 dark:text-gray-300">{user.email}</p>
+      <div className="mt-4 text-center">
+        <button className="rounded-full bg-indigo-600 px-4 py-2 text-sm font-bold text-white dark:bg-indigo-500 dark:text-white" type="button">Edit profile</button>
       </div>
     </div>
   );

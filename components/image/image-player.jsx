@@ -7,25 +7,25 @@ export default function ImagePlayer({ onPlayPause, onPrev, onNext, onDownload, o
       id: 'hiOutlineChevronLeft',
       label: <HiOutlineChevronLeft/>,
       onClick: onPrev,
-      className: 'mr-2'
+      className: ''
     },
     {
       id: 'faPlayPause',
       label: isPlaying ? <HiPause/> : <HiOutlinePlay/>,
       onClick: onPlayPause,
-      className: 'mr-2'
+      className: ''
     },
     {
       id: 'hiOutlineChevronRight',
       label: <HiOutlineChevronRight/>,
       onClick: onNext,
-      className: 'mr-2'
+      className: ''
     },
     {
       id: 'hiOutlineCloudDownload',
       label: <HiOutlineCloudDownload/>,
       onClick: onDownload,
-      className: 'mr-2'
+      className: ''
     },
     {
       id: 'hiOutlineXMark',
@@ -35,13 +35,15 @@ export default function ImagePlayer({ onPlayPause, onPrev, onNext, onDownload, o
   ]
 
   return (
-    <div className="flex flex-row ml-auto mt-4">
+    <div className="ml-auto mt-4 flex flex-row gap-2 rounded-full border border-white/15 bg-black/55 p-2 shadow-2xl backdrop-blur">
       {
         buttons.map((button) => (
           <button
             key={button.id}
-            className={`bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ${button.className}`}
+            className={`inline-flex h-10 w-10 items-center justify-center rounded-full bg-white text-lg text-gray-950 transition hover:bg-gray-200 ${button.className}`}
             onClick={button.onClick}
+            type="button"
+            aria-label={button.id}
             >
             {button.label}
           </button>

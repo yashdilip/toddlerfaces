@@ -83,7 +83,7 @@ export default function MyImage({ images = [], onUpdateImage }) {
 
   if (!normalizedImages.length) {
     return (
-      <div className="relative overflow-hidden rounded-lg border border-dashed border-gray-300 bg-white p-8 text-center shadow-sm dark:border-gray-700 dark:bg-gray-950">
+      <div className="relative overflow-hidden rounded-lg border border-dashed border-gray-300 bg-white/90 p-8 text-center shadow-sm backdrop-blur dark:border-gray-700 dark:bg-gray-950/90">
         <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-sky-400 via-rose-300 to-amber-300" />
         <div className="mx-auto grid h-48 max-w-lg grid-cols-6 gap-3">
           {[0, 1, 2, 3, 4, 5, 6, 7, 8].map(item => (
@@ -92,7 +92,7 @@ export default function MyImage({ images = [], onUpdateImage }) {
         </div>
         <h2 className="mt-6 text-xl font-semibold text-gray-950 dark:text-white">This album is waiting for its first memory</h2>
         <p className="mx-auto mt-2 max-w-xl text-sm leading-6 text-gray-600 dark:text-gray-300">
-          Add external image references after attestation. They will appear here as a living gallery once metadata and moderation records exist.
+          Add approved image links and they will appear here as a living gallery, ready for private viewing or careful sharing.
         </p>
       </div>
     )
@@ -130,13 +130,13 @@ export default function MyImage({ images = [], onUpdateImage }) {
       </div>
 
       {onUpdateImage && (
-        <div className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-gray-950">
+        <div className="rounded-lg border border-gray-200 bg-white/90 p-4 shadow-sm backdrop-blur dark:border-gray-800 dark:bg-gray-950/90">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-indigo-600 dark:text-indigo-400">Image privacy controls</h3>
           <div className="mt-3 grid gap-2">
             {normalizedImages.filter((image) => image._id).map((image) => (
               <div className="flex flex-col gap-2 rounded-md bg-gray-50 p-3 text-sm dark:bg-gray-900 sm:flex-row sm:items-center sm:justify-between" key={image._id}>
                 <span className="font-medium text-gray-800 dark:text-gray-100">{image.caption}</span>
-                <select className="rounded-md border border-gray-300 bg-white px-2 py-1 dark:border-gray-700 dark:bg-gray-950" value={image.visibility || "inherit_album"} onChange={(event) => onUpdateImage(image._id, { visibility: event.target.value })}>
+                <select className="h-9 rounded-md border border-gray-300 bg-white px-2 text-sm text-gray-900 dark:border-gray-700 dark:bg-gray-950 dark:text-white" value={image.visibility || "inherit_album"} onChange={(event) => onUpdateImage(image._id, { visibility: event.target.value })}>
                   <option value="inherit_album">Inherit album</option>
                   <option value="private">Private</option>
                   <option value="public">Public</option>
@@ -152,7 +152,7 @@ export default function MyImage({ images = [], onUpdateImage }) {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(255,255,255,0.12),transparent_38%)]" />
           <div className="relative max-h-[84vh] max-w-6xl">
             <MemoryImage image={selectedImage} className="max-h-[84vh] max-w-full rounded-lg object-contain shadow-2xl" priority />
-            <div className="absolute inset-x-0 top-0 rounded-t-lg bg-gradient-to-b from-black/60 to-transparent p-5 text-white">
+            <div className="absolute inset-x-0 top-0 rounded-t-3xl bg-gradient-to-b from-black/60 to-transparent p-5 text-white">
               <p className="max-w-2xl text-sm leading-6">{selectedImage.caption}</p>
             </div>
           </div>

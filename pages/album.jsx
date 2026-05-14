@@ -15,20 +15,25 @@ const providerOptions = [
   ["external_url", "Direct image URL"],
 ]
 
+const fieldClass = "mt-1 h-11 w-full rounded-md border border-gray-300 bg-white px-3 text-sm text-gray-900 shadow-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+const textareaClass = "mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 shadow-sm outline-none transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white"
+const labelClass = "block text-sm font-medium text-gray-700 dark:text-gray-200"
+const primaryButtonClass = "w-full rounded-full bg-indigo-600 px-4 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-gray-400 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400"
+
 const fallbackImages = [
   {
     sourceUrl: "/image1.jpg",
-    caption: "Demo memory placeholder",
+    caption: "A first memory for the album wall",
     moderationStatus: "approved",
   },
   {
     sourceUrl: "/image2.jpg",
-    caption: "Add real external references to replace this preview",
+    caption: "A quiet moment ready to be preserved",
     moderationStatus: "approved",
   },
   {
     sourceUrl: "/image3.jpg",
-    caption: "A gallery layout shaped for long-term remembering",
+    caption: "A milestone worth returning to",
     moderationStatus: "approved",
   },
 ]
@@ -64,7 +69,7 @@ const Album = () => {
         setAlbum(albumResponse.data)
         setImages(Array.isArray(imageResponse.data) ? imageResponse.data : [])
       } catch (error) {
-        setMessage(error?.response?.data?.message || "Could not load album. Sign in or check your MongoDB connection.")
+        setMessage(error?.response?.data?.message || "We could not open this album right now. Please sign in and try again.")
       }
     }
 
@@ -95,7 +100,7 @@ const Album = () => {
           provider: album?.mediaProvider || "google_drive",
           caption: "",
         })
-        setMessage("Media reference added. It is marked pending moderation until a provider is connected.")
+        setMessage("Image reference added. It will stay under review before any public sharing.")
       }
     } catch (error) {
       setMessage(error?.response?.data?.message || "Could not add media reference.")
@@ -210,15 +215,15 @@ const Album = () => {
   const galleryImages = images.length ? images : fallbackImages
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-12">
-      <section className="relative overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-950">
+    <div className="app-container app-page">
+      <section className="relative overflow-hidden rounded-lg border border-gray-200 bg-white/90 shadow-sm backdrop-blur dark:border-gray-800 dark:bg-gray-950/90">
         <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-rose-400 via-amber-300 to-sky-400" />
         <div className="grid gap-6 p-6 lg:grid-cols-[1fr_360px]">
           <div>
             <p className="text-sm font-semibold uppercase tracking-wide text-indigo-600 dark:text-indigo-400">Album workspace</p>
-            <h1 className="mt-2 text-4xl font-bold tracking-tight text-gray-950 dark:text-white">{album?.title || "Memory album"}</h1>
+            <h1 className="mt-2 text-4xl font-black tracking-tight text-gray-950 dark:text-white">{album?.title || "Memory album"}</h1>
             <p className="mt-3 max-w-3xl text-sm leading-6 text-gray-600 dark:text-gray-300">
-              {album?.description || "Build the album by attaching external media references. Toddlerfaces stores the story, permissions, and audit trail while the original files stay with the provider you choose."}
+              {album?.description || "Build the album by attaching external image links. Toddlerfaces keeps the album story, permissions, and sharing history while the original files stay with the provider you choose."}
             </p>
             <div className="mt-5 flex flex-wrap gap-2 text-xs font-semibold">
               <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-gray-700 dark:bg-gray-900 dark:text-gray-200">
@@ -238,10 +243,10 @@ const Album = () => {
             </div>
           </div>
 
-          <div className="rounded-lg bg-gray-50 p-4 dark:bg-gray-900">
-            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Source of truth</p>
+          <div className="rounded-md bg-gray-50 p-4 dark:bg-gray-900">
+            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Where photos live</p>
             <p className="mt-2 text-sm leading-6 text-gray-700 dark:text-gray-200">
-              MongoDB stores album, image, permission, moderation, and legal audit metadata. Original media stays in Drive, Dropbox, OneDrive, S3/R2, or the photographer gallery.
+              Toddlerfaces keeps the album story, permissions, safety status, and sharing history. Original media stays with the storage provider chosen by the family or photographer.
             </p>
           </div>
         </div>
@@ -256,7 +261,7 @@ const Album = () => {
             </div>
             {!images.length && (
               <p className="max-w-sm text-right text-xs text-gray-500 dark:text-gray-400">
-                Showing demo placeholders until external references are added.
+                Showing a preview memory wall until images are added.
               </p>
             )}
           </div>
@@ -264,32 +269,32 @@ const Album = () => {
         </section>
 
         <aside className="space-y-5">
-          <form onSubmit={addMediaReference} className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-800 dark:bg-gray-950">
+          <form onSubmit={addMediaReference} className="rounded-lg border border-gray-200 bg-white/90 p-5 shadow-sm backdrop-blur dark:border-gray-800 dark:bg-gray-950/90">
             <h2 className="text-lg font-semibold text-gray-950 dark:text-white">Attach external image</h2>
             <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-300">
-              Add a direct image URL or provider reference. Google Drive folder browsing should come later through OAuth and a picker; the production default should not copy originals into app storage.
+              Add an image link from the selected storage provider. Toddlerfaces keeps the reference and review status without copying the original file into app storage.
             </p>
 
             <label className="mt-4 block text-sm font-medium text-gray-700 dark:text-gray-200">
               Provider
-              <select className="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900 dark:text-white" value={mediaReference.provider} onChange={(event) => setMediaReference({ ...mediaReference, provider: event.target.value })}>
+              <select className={fieldClass} value={mediaReference.provider} onChange={(event) => setMediaReference({ ...mediaReference, provider: event.target.value })}>
                 {providerOptions.map(([value, label]) => <option value={value} key={value}>{label}</option>)}
               </select>
             </label>
 
             <label className="mt-4 block text-sm font-medium text-gray-700 dark:text-gray-200">
               Image or provider URL
-              <input className="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900 dark:text-white" value={mediaReference.sourceUrl} onChange={(event) => setMediaReference({ ...mediaReference, sourceUrl: event.target.value })} placeholder="https://..." />
+              <input className={fieldClass} value={mediaReference.sourceUrl} onChange={(event) => setMediaReference({ ...mediaReference, sourceUrl: event.target.value })} placeholder="Paste the image link" />
             </label>
 
             <label className="mt-4 block text-sm font-medium text-gray-700 dark:text-gray-200">
               Optional thumbnail URL
-              <input className="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900 dark:text-white" value={mediaReference.thumbnailUrl} onChange={(event) => setMediaReference({ ...mediaReference, thumbnailUrl: event.target.value })} placeholder="https://..." />
+              <input className={fieldClass} value={mediaReference.thumbnailUrl} onChange={(event) => setMediaReference({ ...mediaReference, thumbnailUrl: event.target.value })} placeholder="Paste a thumbnail link when available" />
             </label>
 
             <label className="mt-4 block text-sm font-medium text-gray-700 dark:text-gray-200">
               Caption
-              <textarea className="mt-1 min-h-20 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900 dark:text-white" value={mediaReference.caption} onChange={(event) => setMediaReference({ ...mediaReference, caption: event.target.value })} placeholder="What should this memory remember?" />
+              <textarea className={`${textareaClass} min-h-20`} value={mediaReference.caption} onChange={(event) => setMediaReference({ ...mediaReference, caption: event.target.value })} placeholder="What should this memory remember?" />
             </label>
 
             <label className="mt-5 flex gap-3 rounded-md border border-gray-200 bg-gray-50 p-3 text-sm text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-200">
@@ -297,26 +302,26 @@ const Album = () => {
               <span>I legally attest that I am an adult, I have permission to attach this media, and it does not contain illegal, exploitative, abusive, non-consensual, nude, violent, or otherwise restricted content.</span>
             </label>
 
-            <button className="mt-5 w-full rounded-md bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-gray-400" type="submit" disabled={!session?.user || !albumId}>
+            <button className={`mt-5 ${primaryButtonClass}`} type="submit" disabled={!session?.user || !albumId}>
               Add media reference
             </button>
           </form>
 
-          <form onSubmit={importSelectedLinks} className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-800 dark:bg-gray-950">
+          <form onSubmit={importSelectedLinks} className="rounded-lg border border-gray-200 bg-white/90 p-5 shadow-sm backdrop-blur dark:border-gray-800 dark:bg-gray-950/90">
             <h2 className="text-lg font-semibold text-gray-950 dark:text-white">Google Drive selected links</h2>
             <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-300">
-              Phase-one Drive support: paste the exact image links selected from a shared Drive folder, one per line. OAuth Picker can replace this textarea later without changing the metadata model.
+              Paste selected Drive image links, one per line, or use the picker to choose images from a connected Drive account.
             </p>
             <Link href={`/drive-picker?albumId=${albumId || ""}`} className="mt-3 inline-flex text-sm font-semibold text-indigo-600 dark:text-indigo-300">
               Use Google Drive Picker
             </Link>
-            <textarea className="mt-4 min-h-28 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900 dark:text-white" value={bulkLinks} onChange={(event) => setBulkLinks(event.target.value)} placeholder={"https://drive.google.com/file/d/...\nhttps://drive.google.com/file/d/..."} />
-            <button className="mt-3 w-full rounded-md bg-sky-600 px-4 py-2 text-sm font-semibold text-white" type="submit" disabled={!session?.user || !albumId}>
+            <textarea className={`${textareaClass} mt-4 min-h-28`} value={bulkLinks} onChange={(event) => setBulkLinks(event.target.value)} placeholder={"Paste one selected Drive image link per line"} />
+            <button className={`mt-3 ${primaryButtonClass}`} type="submit" disabled={!session?.user || !albumId}>
               Import selected links
             </button>
           </form>
 
-          <div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-800 dark:bg-gray-950">
+          <div className="rounded-lg border border-gray-200 bg-white/90 p-5 shadow-sm backdrop-blur dark:border-gray-800 dark:bg-gray-950/90">
             <div className="flex items-center gap-2 text-gray-950 dark:text-white">
               <FiShield />
               <h2 className="text-lg font-semibold">Public safety gate</h2>
@@ -325,17 +330,17 @@ const Album = () => {
               Public visibility requires a parent/account-holder email approval. For photographer albums, enter the parent consent email here before the album can become public.
             </p>
             <form onSubmit={requestPublicApproval} className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+              <label className={labelClass}>
                 Parent consent email
-                <input className="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900 dark:text-white" type="email" value={parentConsentEmail} onChange={(event) => setParentConsentEmail(event.target.value)} placeholder="parent@example.com" />
+                <input className={fieldClass} type="email" value={parentConsentEmail} onChange={(event) => setParentConsentEmail(event.target.value)} placeholder="Parent email address" />
               </label>
-              <button className="mt-3 w-full rounded-md bg-gray-900 px-4 py-2 text-sm font-semibold text-white dark:bg-white dark:text-gray-950" type="submit" disabled={!session?.user || !albumId}>
+              <button className={`mt-3 ${primaryButtonClass}`} type="submit" disabled={!session?.user || !albumId}>
                 Request public approval
               </button>
             </form>
             {album?.publicApproval?.approvalUrl && (
               <p className="mt-3 break-all rounded-md bg-gray-50 p-3 text-xs text-gray-600 dark:bg-gray-900 dark:text-gray-300">
-                Approval link queued in email outbox: {album.publicApproval.approvalUrl}
+                Approval email is ready to send: {album.publicApproval.approvalUrl}
               </p>
             )}
             {album?.visibility === "public" && (
@@ -348,17 +353,17 @@ const Album = () => {
             )}
           </div>
 
-          <div className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm dark:border-gray-800 dark:bg-gray-950">
+          <div className="rounded-lg border border-gray-200 bg-white/90 p-5 shadow-sm backdrop-blur dark:border-gray-800 dark:bg-gray-950/90">
             <h2 className="text-lg font-semibold text-gray-950 dark:text-white">Invite private viewer</h2>
             <p className="mt-2 text-sm leading-6 text-gray-600 dark:text-gray-300">
               Invite-based sharing keeps the album private to selected users without making it public.
             </p>
             <form onSubmit={inviteViewer} className="mt-4">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-200">
+              <label className={labelClass}>
                 Viewer email
-                <input className="mt-1 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900 dark:text-white" type="email" value={inviteEmail} onChange={(event) => setInviteEmail(event.target.value)} placeholder="family@example.com" />
+                <input className={fieldClass} type="email" value={inviteEmail} onChange={(event) => setInviteEmail(event.target.value)} placeholder="Viewer email address" />
               </label>
-              <button className="mt-3 w-full rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white" type="submit" disabled={!session?.user || !albumId}>
+              <button className={`mt-3 ${primaryButtonClass}`} type="submit" disabled={!session?.user || !albumId}>
                 Send invite
               </button>
             </form>

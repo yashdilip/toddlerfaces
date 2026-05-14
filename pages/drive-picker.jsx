@@ -56,12 +56,12 @@ export default function DrivePickerPage() {
     setMessage("");
 
     if (!apiKey || !clientId) {
-      setMessage("Google Picker is not configured. Set NEXT_PUBLIC_GOOGLE_CLIENT_ID and NEXT_PUBLIC_GOOGLE_DRIVE_PICKER_API_KEY.");
+      setMessage("Drive selection is not available yet. Please use selected Drive links for this album.");
       return;
     }
 
     if (!window.google?.accounts?.oauth2 || !window.google?.picker || !gapiReady || !gisReady) {
-      setMessage("Google Picker scripts are still loading.");
+      setMessage("Drive selection is getting ready. Please try again in a moment.");
       return;
     }
 
@@ -93,13 +93,13 @@ export default function DrivePickerPage() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-12">
+    <div className="app-container app-page">
       <Script src="https://apis.google.com/js/api.js" onLoad={loadPickerApi} />
       <Script src="https://accounts.google.com/gsi/client" onLoad={() => setGisReady(true)} />
 
-      <section className="rounded-lg border border-gray-200 bg-white p-8 shadow-sm dark:border-gray-800 dark:bg-gray-950">
-        <p className="text-sm font-semibold uppercase tracking-wide text-indigo-600 dark:text-indigo-400">Google Drive Picker</p>
-        <h1 className="mt-2 text-3xl font-bold text-gray-950 dark:text-white">Select Drive images for this album</h1>
+      <section className="app-prose rounded-lg border border-gray-200 bg-white/90 p-8 shadow-xl shadow-gray-900/5 backdrop-blur dark:border-gray-800 dark:bg-gray-950/90">
+        <p className="inline-flex rounded-full border border-indigo-200 bg-white/75 px-3 py-1 text-sm font-bold uppercase tracking-wide text-indigo-700 shadow-sm dark:border-indigo-900 dark:bg-gray-950/70 dark:text-indigo-300">Google Drive Picker</p>
+        <h1 className="mt-5 text-3xl font-black tracking-tight text-gray-950 dark:text-white">Select Drive images for this album</h1>
         <p className="mt-3 text-sm leading-6 text-gray-600 dark:text-gray-300">
           Pick multiple images from Google Drive. Toddlerfaces stores image references, thumbnails, captions, and audit metadata; it does not copy original files into app storage.
         </p>
@@ -109,7 +109,7 @@ export default function DrivePickerPage() {
           <span>I legally attest that I am an adult, I have permission to attach these Drive images, and they do not contain illegal, exploitative, abusive, non-consensual, nude, violent, or restricted content.</span>
         </label>
 
-        <button onClick={openPicker} className="mt-6 rounded-md bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-indigo-700" type="button">
+        <button onClick={openPicker} className="mt-6 rounded-full bg-indigo-600 px-5 py-3 text-sm font-bold text-white shadow-sm transition hover:bg-indigo-700 dark:bg-indigo-500 dark:text-white dark:hover:bg-indigo-400" type="button">
           Open Google Drive Picker
         </button>
 
@@ -118,7 +118,7 @@ export default function DrivePickerPage() {
         {selectedFiles.length > 0 && (
           <div className="mt-6 grid gap-3 sm:grid-cols-2">
             {selectedFiles.map((file) => (
-              <div className="rounded-md border border-gray-200 p-3 text-sm dark:border-gray-800" key={file.id}>
+              <div className="rounded-md border border-gray-200 bg-gray-50/80 p-3 text-sm dark:border-gray-800 dark:bg-gray-900/80" key={file.id}>
                 <p className="font-semibold text-gray-950 dark:text-white">{file.name}</p>
                 <p className="mt-1 break-all text-xs text-gray-500 dark:text-gray-400">{file.id}</p>
               </div>
